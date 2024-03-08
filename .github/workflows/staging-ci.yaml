@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-steps:
+    steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
       - name: Checkout
