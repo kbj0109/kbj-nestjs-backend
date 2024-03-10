@@ -52,10 +52,10 @@ jobs:
             staging-kbj-nestjs-backend
           parse-json-secrets: false
 
-      - run: |
-          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
-        env:
-          SECRETS_CONTEXT: ${{ fromJSON(toJson(env)).STAGING_KBJ_NESTJS_BACKEND }}
+      # - run: |
+      #     jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
+      #   env:
+      #     SECRETS_CONTEXT: ${{ toJson(env).STAGING_KBJ_NESTJS_BACKEND }}
 
       - run: |
           npm install
