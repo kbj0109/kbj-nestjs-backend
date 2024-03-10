@@ -42,7 +42,7 @@ jobs:
       - name: Read secrets from AWS Secrets Manager into environment variables
         uses: abhilash1in/aws-secrets-manager-action@v2.1.0
         with:
-          secrets: staging-kbj-nestjs-backend
+          secrets: staging-kbj-nestjs-backend1
           parse-json: true
       
       - run: |
