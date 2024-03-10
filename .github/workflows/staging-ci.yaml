@@ -46,7 +46,7 @@ jobs:
       #     parse-json: true
       
       - run: |
-          aws ssm get-parameter --with-decryption --name staging-kbj-nestjs-backend1 --region ap-northeast-2 | jq -r '.Parameter.Value' > .env
+          aws ssm get-parameter --name staging-kbj-nestjs-backend1 | jq -r '.Parameter.Value' > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(env) }}
 
