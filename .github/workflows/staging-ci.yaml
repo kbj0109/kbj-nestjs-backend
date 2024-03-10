@@ -49,7 +49,6 @@ jobs:
             staging-kbj-nestjs-backend
           parse-json: true
       
-      - name: Create .env file
       - run: |
           aws ssm get-parameter --with-decryption --name staging-kbj-nestjs-backend --region ap-northeast-2 | jq -r '.Parameter.Value' > .env
         env:
