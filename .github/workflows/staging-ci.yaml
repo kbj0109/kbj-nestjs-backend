@@ -50,7 +50,7 @@ jobs:
         with:
           secret-ids: |
             staging-kbj-nestjs-backend
-          parse-json-secrets: false
+          parse-json-secrets: true
 
       # - run: |
       #     jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
