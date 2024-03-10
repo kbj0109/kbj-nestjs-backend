@@ -20,8 +20,8 @@ describe('AppController', () => {
   test('/ (GET)', () => {
     console.log(process.env.SERVER_ENV);
     console.log(process.env.SERVER_PORT);
-    console.log(process.env.STAGING_KBJ_NESTJS_BACKEND1_SERVER_ENV);
-    console.log(process.env.STAGING_KBJ_NESTJS_BACKEND1_SERVER_PORT);
+    console.log(process.env.STAGING_KBJ_NESTJS_BACKEND_SERVER_ENV);
+    console.log(process.env.STAGING_KBJ_NESTJS_BACKEND_SERVER_PORT);
 
     console.log(111, process.env.STAGING_KBJ_NESTJS_BACKEND);
 
