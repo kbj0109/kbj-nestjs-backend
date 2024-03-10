@@ -46,7 +46,7 @@ jobs:
       #     parse-json: true
 
       - name: Read Env from AWS Secrets Manager
-        uses: aws-actions/aws-secretsmanager-get-secrets@v1
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
           secret-ids: |
             staging-kbj-nestjs-backend

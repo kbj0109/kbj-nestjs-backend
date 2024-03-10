@@ -34,6 +34,10 @@ describe('AppController', () => {
       process.env.SERVER_PORT ||
       process.env.STAGING_KBJ_NESTJS_BACKEND_SERVER_PORT;
 
+    const envs = process.env.STAGING_KBJ_NESTJS_BACKEND as any;
+    expect(envs.SERVER_ENV).toBe('staging');
+    expect((envs.SERVER_PORT || '').toString()).toBe((3001).toString());
+
     expect(!!SERVER_PORT || !!SERVER_ENV).toBe(true);
 
     expect(100).toBe(100);
