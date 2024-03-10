@@ -39,61 +39,65 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 1111 Debug show secret value
-        run: |
-          echo ${{ env.SERVER_ENV }}
-
       - name: Read secrets from AWS Secrets Manager into environment variables
         uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
           secrets: |
             staging-kbj-nestjs-backend
           parse-json: true
-
-      - name: 2222 Debug show secret value
-        run: |
-          echo ${{ env.SERVER_ENV }}
-
-      # Amazon ECR에 로그인
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
+      
+      - name: Create .env file
+      - run: |
+          aws ssm get-parameter --with-decryption --name staging-kbj-nestjs-backend --region ap-northeast-2 | jq -r '.Parameter.Value' > .env
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+      - run: |
+          npm install
+      - run: |
+          npm test
 
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+      # # Amazon ECR에 로그인
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Deploy on EC2 instance
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ env.EC2_IP_ADDRESS }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/ubuntu/Eye_of_AI_Client
-            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws configure set region ${{ env.AWS_REGION }}
-            ECR_REGISTRY_LOGIN=$(aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }})
-            sudo docker stop ${{ env.ECR_REPOSITORY }} || true
-            sudo docker rm ${{ env.ECR_REPOSITORY }} || true
-            sudo docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
-            sudo docker run -d --name eyeofai -p 3080:3080 ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
-      - name: action-slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }} #job의 성공 여부 
-          author_name: Sloth Backend - dev #알림 메시지의 제목으로 사용될 이름
-          fields: repo,commit,message,author #메시지에 보일 정보
-          mention: here #멘션할 대상 지정 
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # - name: Build, tag, and push image to Amazon ECR
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+
+      #   run: |
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #     echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
+      # - name: Deploy on EC2 instance
+      #   uses: appleboy/ssh-action@v0.1.6
+      #   with:
+      #     host: ${{ env.EC2_IP_ADDRESS }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      #     script: |
+      #       cd /home/ubuntu/Eye_of_AI_Client
+      #       aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #       aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #       aws configure set region ${{ env.AWS_REGION }}
+      #       ECR_REGISTRY_LOGIN=$(aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }})
+      #       sudo docker stop ${{ env.ECR_REPOSITORY }} || true
+      #       sudo docker rm ${{ env.ECR_REPOSITORY }} || true
+      #       sudo docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+      #       sudo docker run -d --name eyeofai -p 3080:3080 ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+      # - name: action-slack
+      #   uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: ${{ job.status }} #job의 성공 여부 
+      #     author_name: Sloth Backend - dev #알림 메시지의 제목으로 사용될 이름
+      #     fields: repo,commit,message,author #메시지에 보일 정보
+      #     mention: here #멘션할 대상 지정 
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

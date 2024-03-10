@@ -1,3 +1,6 @@
+import { setEnvironment } from './config/environment';
+setEnvironment();
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
@@ -15,7 +18,8 @@ describe('AppController', () => {
   });
 
   test('/ (GET)', () => {
-    console.warn(1111);
+    console.log(process.env.SERVER_ENV);
+    console.log(process.env.SERVER_PORT);
 
     expect(100).toBe(100);
   });
