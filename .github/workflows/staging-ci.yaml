@@ -39,14 +39,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # - name: Read secrets from AWS Secrets Manager into environment variables
-      #   uses: abhilash1in/aws-secrets-manager-action@v2.0.0
-      #   with:
-      #     secrets: staging-kbj-nestjs-backend1
-      #     parse-json: true
+      - name: Read secrets from AWS Secrets Manager into environment variables
+        uses: abhilash1in/aws-secrets-manager-action@v2.1.0
+        with:
+          secrets: staging-kbj-nestjs-backend
+          parse-json: false
       
       - run: |
-          aws ssm get-parameter --name staging-kbj-nestjs-backend1 | jq -r '.Parameter.Value' > .env
+          jq -r '.Parameter.Value' > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(env) }}
 
