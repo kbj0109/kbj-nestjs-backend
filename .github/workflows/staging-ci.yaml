@@ -1,31 +1,37 @@
+# Staging Continuous Integration
+name: staging continuous intregation
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# GitHub Action 발생 조건 설정
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
-      - main
+      - [develop, staging, production]
+  push:
+    branches:
+      - [develop, staging, production]
 
 env:
-  AWS_REGION: AWS REGION
-  ECR_REGISTRY: ECR REPOSITORY URI
-  ECR_REPOSITORY: ECR REPOSITORY NAME
-  EC2_IP_ADDRESS: EC2 IP ADDRESS
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  RELEASE_REVISION: 'kbj-nestjs-backend-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}'
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ECR_REPOSITORY: staging-kbj-nestjs-backend
 
 jobs:
-  deploy:
-    name: Deploy
+  test:
     runs-on: ubuntu-latest
     environment: production
+
+    strategy:
+      matrix:
+        node-version: [20.5.0]
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
       - name: Configure AWS credentials
@@ -34,6 +40,24 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 1111 Debug show secret value
+        run: |
+          echo ${{ env.SERVER_ENV }}
+
+      - name: Read secrets from AWS Secrets Manager into environment variables
+        uses: aws-actions/aws-secretsmanager-get-secrets@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          secrets: |
+            staging-kbj-nestjs-backend
+          parse-json: true
+
+      - name: 2222 Debug show secret value
+        run: |
+          echo ${{ env.SERVER_ENV }}
 
       # Amazon ECR에 로그인
       - name: Login to Amazon ECR
