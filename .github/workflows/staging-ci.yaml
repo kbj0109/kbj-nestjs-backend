@@ -44,9 +44,9 @@ jobs:
         with:
           secrets: staging-kbj-nestjs-backend
           parse-json: false
-      
+
       - run: |
-          jq -r '.Parameter.Value' > .env
+          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(env) }}
 
