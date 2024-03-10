@@ -1,5 +1,5 @@
-import { setEnvironment } from './config/environment';
-setEnvironment();
+// import { setEnvironment } from './config/environment';
+// setEnvironment();
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';

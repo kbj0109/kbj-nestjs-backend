@@ -33,17 +33,24 @@ jobs:
 
       # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Read secrets from AWS Secrets Manager into environment variables
-        uses: abhilash1in/aws-secrets-manager-action@v2.1.0
+      # - name: Read secrets from AWS Secrets Manager into environment variables
+      #   uses: abhilash1in/aws-secrets-manager-action@v2.1.0
+      #   with:
+      #     secrets: staging-kbj-nestjs-backend
+      #     parse-json: true
+
+      - name: Read Env from AWS Secrets Manager
+        uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
-          secrets: staging-kbj-nestjs-backend
-          parse-json: true
+          secret-ids: |
+            staging-kbj-nestjs-backend
+          parse-json-secrets: false
 
       - run: |
           jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
