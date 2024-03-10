@@ -26,21 +26,27 @@ jobs:
         node-version: [20.5.0]
 
     steps:
-      # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
       - name: Checkout
         uses: actions/checkout@v3
 
+      # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Read secrets from AWS Secrets Manager into environment variables
+        uses: abhilash1in/aws-secrets-manager-action@v2.1.0
+        with:
+          secrets: staging-kbj-nestjs-backend
+          parse-json: true
+      
       - run: |
-          aws ssm get-parameter --with-decryption --name "staging-kbj-nestjs-backend" --region ap-northeast-2 | jq -r '.Parameter.Value' > .env
+          jq -r '.Parameter.Value' > .env
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
