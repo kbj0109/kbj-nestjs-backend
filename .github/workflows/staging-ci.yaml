@@ -4,11 +4,9 @@ name: staging continuous intregation
 # GitHub Action 발생 조건 설정
 on:
   pull_request:
-    branches:
-      - [develop, staging, production]
+    branches: [develop, staging, production]
   push:
-    branches:
-      - [develop, staging, production]
+    branches: [develop, staging, production]
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
