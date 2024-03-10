@@ -23,6 +23,8 @@ describe('AppController', () => {
     console.log(process.env.STAGING_KBJ_NESTJS_BACKEND1_SERVER_ENV);
     console.log(process.env.STAGING_KBJ_NESTJS_BACKEND1_SERVER_PORT);
 
+    console.log(111, process.env.STAGING_KBJ_NESTJS_BACKEND);
+
     const SERVER_ENV =
       process.env.SERVER_ENV ||
       process.env.STAGING_KBJ_NESTJS_BACKEND_SERVER_ENV;
