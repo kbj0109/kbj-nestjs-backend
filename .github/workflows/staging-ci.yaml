@@ -43,7 +43,7 @@ jobs:
         uses: abhilash1in/aws-secrets-manager-action@v2.0.0
         with:
           secrets: staging-kbj-nestjs-backend1
-          parse-json: true
+          parse-json: false
       
       - run: |
           jq -r '.Parameter.Value' > .env
