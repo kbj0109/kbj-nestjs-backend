@@ -43,9 +43,7 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
           secret-ids: STAGING_KBJ_NESTJS_BACKEND
-          parse-json-secrets: false
-
-
+          parse-json-secrets: true
 
       - run: |
           npm install
