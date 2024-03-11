@@ -47,8 +47,8 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: Staging Test Failed - kbj-nestjs-backend
-          SLACK_MESSAGE: ${{ job.status }} - ${{ secrets.RELEASE_REVISION}} - https://github.com/kbj0109/kbj-nestjs-backend/actions/runs/${{ github.job }}/${{ github.run_id }}'
+          SLACK_TITLE: Staging Test Failed -
+          SLACK_MESSAGE: ${{ job.status }} - https://github.com/${{ github.repository_owner }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           MSG_MINIMAL: true
 # https://github.com/kbj0109/kbj-nestjs-backend/actions/runs/8238319270/job/22529000615
 
