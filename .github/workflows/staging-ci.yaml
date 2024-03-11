@@ -45,7 +45,7 @@ jobs:
       #     secret-ids: STAGING_KBJ_NESTJS_BACKEND
       - name: Get SecretManager by name
         run: |
-          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND --profile kbj | 
+          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND | 
           jq -r '.SecretString' > .env
         # env:
         #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
