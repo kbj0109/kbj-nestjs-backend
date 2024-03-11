@@ -43,20 +43,14 @@ jobs:
       #   uses: aws-actions/aws-secretsmanager-get-secrets@v2
       #   with:
       #     secret-ids: STAGING_KBJ_NESTJS_BACKEND
-
-      - name: Read secrets
-        uses: abhilash1in/aws-secrets-manager-action@v2.0.0
-        with:
-          secrets: STAGING_KBJ_NESTJS_BACKEND
-          parse-json: false
-
-      - name: Create .env file
-        run: jq -r "$SECRETS_CONTEXT" > .env
-        env:
-          SECRETS_CONTEXT: ${{ env }}
-
-      - name: Read .env file
-        run: cat .env
+      - name: Get SecretManager by name
+        run: |
+          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND --profile kbj | 
+          jq -r '.SecretString' > .env
+        # env:
+        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - run: |
           npm install
