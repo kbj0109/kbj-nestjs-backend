@@ -9,17 +9,16 @@ on:
     branches: [develop, staging, production]
 
 env:
+  RELEASE_REVISION: 'kbj-nestjs-backend-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}'
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  RELEASE_REVISION: 'kbj-nestjs-backend-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}'
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ECR_REPOSITORY: staging-kbj-nestjs-backend
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: production
 
     strategy:
       matrix:
@@ -37,8 +36,20 @@ jobs:
           aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND | 
           jq -r '.SecretString' > .env
 
-      - run: npm install
-      - run: npm run test
+      - name: Get Ready for Test
+        run: npm install
+
+      - name: Run Test
+        run: npm run test
+
+      - name: Slack Notification on Failure
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: Staging Test Failed - kbj-nestjs-backend
+          SLACK_MESSAGE: ${{ job.status }} - ${{ RELEASE_REVISION}}
+          MSG_MINIMAL: true
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
       # - name: Configure AWS credentials
