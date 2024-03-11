@@ -45,17 +45,19 @@ jobs:
       #     secrets: staging-kbj-nestjs-backend
       #     parse-json: true
 
-      - name: Read Env from AWS Secrets Manager
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
-        with:
-          secret-ids: |
-            staging-kbj-nestjs-backend
-          parse-json-secrets: true
+      # - name: Read Env from AWS Secrets Manager
+      #   uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      #   with:
+      #     secret-ids: |
+      #       staging-kbj-nestjs-backend
+      #     parse-json-secrets: true
 
-      # - run: |
-      #     jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
-      #   env:
-      #     SECRETS_CONTEXT: ${{ toJson(env).STAGING_KBJ_NESTJS_BACKEND }}
+      - run: |
+          aws ssm get-parameter --with-decryption --name staging-big-case-api-test --region ap-northeast-2 | jq -r '.Parameter.Value' > .env
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - run: |
           npm install
