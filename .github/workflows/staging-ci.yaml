@@ -50,10 +50,10 @@ jobs:
       - name: Read .env file
         run: cat .env
 
-      # - run: |
-      #     npm install
-      # - run: |
-      #     npm run test
+      - run: |
+          npm install
+      - run: |
+          npm run test
 
       # # Amazon ECR에 로그인
       # - name: Login to Amazon ECR
