@@ -31,26 +31,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      # - name: Get SecretManager by name
-      #   uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
       #   with:
-      #     secret-ids: STAGING_KBJ_NESTJS_BACKEND
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Get SecretManager by name
         run: |
           aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND | 
           jq -r '.SecretString' > .env
-        # env:
-        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - run: |
           npm install
