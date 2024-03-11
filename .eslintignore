@@ -1,0 +1,7 @@
+node_modules/
+
+# 빌드 위치
+dist/
+
+# # DB 마이그레이션에서 자동으로 생성
+# src/migrations/histories

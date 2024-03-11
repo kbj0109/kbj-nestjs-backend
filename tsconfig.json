@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "composite": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -8,14 +9,20 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
+    "rootDir": "./",
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
     "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {},
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "typeRoots": ["./node_modules/@types"],
+    "esModuleInterop": true
   }
 }
