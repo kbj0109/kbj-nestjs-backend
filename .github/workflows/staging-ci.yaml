@@ -48,7 +48,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_COLOR: ${{ job.status }}
           SLACK_TITLE: Staging Test Failed - kbj-nestjs-backend
-          SLACK_MESSAGE: ${{ job.status }} - ${{ RELEASE_REVISION}}
+          SLACK_MESSAGE: ${{ job.status }} - ${{ secrets.RELEASE_REVISION}}
           MSG_MINIMAL: true
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
