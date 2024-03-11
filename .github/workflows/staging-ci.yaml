@@ -41,9 +41,9 @@ jobs:
 
       - name: Get SecretManager by name
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
-        parse-json: false
         with:
           secret-ids: STAGING_KBJ_NESTJS_BACKEND
+          parse-json: false
 
       - name: Create .env file
         run: echo $STAGING_KBJ_NESTJS_BACKEND > .env
