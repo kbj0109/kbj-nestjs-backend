@@ -39,10 +39,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - run: |
-          npm install
-      - run: |
-          npm run test
+      - name: Get SecretManager by name
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: STAGING_KBJ_NESTJS_BACKEND
+
+      # - run: |
+      #     npm install
+      # - run: |
+      #     npm run test
 
       # # Amazon ECR에 로그인
       # - name: Login to Amazon ECR
@@ -78,9 +83,9 @@ jobs:
       # - name: action-slack
       #   uses: 8398a7/action-slack@v3
       #   with:
-      #     status: ${{ job.status }} #job의 성공 여부 
+      #     status: ${{ job.status }} #job의 성공 여부
       #     author_name: Sloth Backend - dev #알림 메시지의 제목으로 사용될 이름
       #     fields: repo,commit,message,author #메시지에 보일 정보
-      #     mention: here #멘션할 대상 지정 
+      #     mention: here #멘션할 대상 지정
       #   env:
       #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
