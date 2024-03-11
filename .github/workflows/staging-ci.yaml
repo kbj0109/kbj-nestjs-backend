@@ -44,6 +44,12 @@ jobs:
         with:
           secret-ids: STAGING_KBJ_NESTJS_BACKEND
 
+      - name: Create .env file
+        run: echo $STAGING_KBJ_NESTJS_BACKEND > .env
+
+      - name: Read .env file
+        run: cat .env
+
       # - run: |
       #     npm install
       # - run: |
