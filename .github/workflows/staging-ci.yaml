@@ -39,10 +39,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Get SecretManager by name
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      # - name: Get SecretManager by name
+      #   uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      #   with:
+      #     secret-ids: STAGING_KBJ_NESTJS_BACKEND
+
+      - name: Read secrets
+        uses: abhilash1in/aws-secrets-manager-action@v2.0.0
         with:
-          secret-ids: STAGING_KBJ_NESTJS_BACKEND
+          secrets: STAGING_KBJ_NESTJS_BACKEND
           parse-json: false
 
       - name: Create .env file
