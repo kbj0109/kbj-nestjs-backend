@@ -3,8 +3,8 @@ name: staging continuous intregation
 
 # GitHub Action 발생 조건 설정
 on:
-  # pull_request:
-  #   branches: [develop, staging, production]
+  pull_request:
+    branches: [develop, staging, production]
   push:
     branches: [develop, staging, production]
 
@@ -54,8 +54,12 @@ jobs:
             ${{ github.event.pull_request.title }}
             ${{ github.base_ref }} => ${{ github.head_ref }}
             ${{ github.event.pull_request.base.ref }} => ${{ github.event.pull_request.head.ref }}
-            ${{ GITHUB_HEAD_REF }} ${{ GITHUB_BASE_REF }}
+            # ${{ GITHUB_HEAD_REF }} ${{ GITHUB_BASE_REF }}
             ${{ github.event.number }}
+            ${{ github.event.pull_request.head.sha }}
+            ${{ github.event.pull_request.base.sha }}
+            ${{ github.event_name }}
+            ${{ github.head_ref }}
           MSG_MINIMAL: true
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
