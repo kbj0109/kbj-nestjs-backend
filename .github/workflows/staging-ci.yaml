@@ -56,9 +56,8 @@ jobs:
 
 
             > Pull Request #${{ github.event.pull_request.number }}
-              [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
-              
-              <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
+                [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
+            <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
 
 
             ${{ github.event_name }}
