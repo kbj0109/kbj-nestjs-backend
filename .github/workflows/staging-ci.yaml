@@ -53,7 +53,7 @@ jobs:
             https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
             ${{ github.event.pull_request.title }}
             ${{ github.event.pull_request.base.ref }} => ${{ github.event.pull_request.head.ref }}
-            ${{ github.event_name }} # pull_request
+            ${{ github.event_name }}
             [Link to Workflow](https://github.com)
 
           MSG_MINIMAL: true
