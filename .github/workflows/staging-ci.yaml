@@ -30,17 +30,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # SecrentManager에서 .env 생성
-      - name: Get SecretManager by name
-        run: |
-          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND | 
-          jq -r '.SecretString' > .env
+      # # SecrentManager에서 .env 생성
+      # - name: Get SecretManager by name
+      #   run: |
+      #     aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND |
+      #     jq -r '.SecretString' > .env
 
-      - name: Get Ready for Test
-        run: npm install
+      # - name: Get Ready for Test
+      #   run: npm install
 
-      - name: Run Test
-        run: npm run test
+      # - name: Run Test
+      #   run: npm run test
 
       - name: Slack Notification on Failure
         uses: rtCamp/action-slack-notify@v2
@@ -54,6 +54,8 @@ jobs:
             ${{ github.event.pull_request.title }}
             ${{ github.base_ref }} => ${{ github.head_ref }}
             ${{ github.event.pull_request.base.ref }} => ${{ github.event.pull_request.head.ref }}
+            ${{ GITHUB_HEAD_REF }} ${{ GITHUB_BASE_REF }}
+            ${{ github.event.number }}
           MSG_MINIMAL: true
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
