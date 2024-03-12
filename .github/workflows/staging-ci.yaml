@@ -45,6 +45,9 @@ jobs:
       - name: Slack Notification on Failure
         uses: rtCamp/action-slack-notify@v2
         # if: failure()
+        if: |
+          (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) ||
+          (github.event_name == 'push')
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_COLOR: ${{ job.status }}
@@ -57,8 +60,6 @@ jobs:
 
             > Pull Request #${{ github.event.pull_request.number }} - [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
             - <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
-
-            ${{ github.event_name }}
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
       # - name: Configure AWS credentials
