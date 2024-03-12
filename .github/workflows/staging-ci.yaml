@@ -52,13 +52,10 @@ jobs:
           SLACK_MESSAGE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}
             ${{ github.event.pull_request.title }}
-            ${{ github.base_ref }} => ${{ github.head_ref }}
             ${{ github.event.pull_request.base.ref }} => ${{ github.event.pull_request.head.ref }}
-            ${{ github.event.number }}
-            ${{ github.event.pull_request.head.sha }}
-            ${{ github.event.pull_request.base.sha }}
-            ${{ github.event_name }}
-            ${{ github.head_ref }}
+            ${{ github.event_name }} # pull_request
+            [Link to Workflow](https://github.com)
+
           MSG_MINIMAL: true
 
       # # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
