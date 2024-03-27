@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: kbj-container
-          image: 929692293093.dkr.ecr.ap-northeast-2.amazonaws.com/staging-kbj-nestjs-backend-registry:29e744263e48ef97d77c31a519cd03bc087f2b79
+          image: kbj-nestjs-backend:1.0
           ports:
             - containerPort: 3001
