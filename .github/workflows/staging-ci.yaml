@@ -1,0 +1,139 @@
+# Staging Continuous Integration
+name: staging continuous intregation
+
+# GitHub Action 발생 조건 설정
+on:
+  pull_request:
+    branches: [develop, staging, production]
+    types: [closed]
+
+  push:
+    branches: [develop, staging, production]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ECR_REPOSITORY: staging-kbj-nestjs-backend-registry
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+jobs:
+  test:
+    if: github.event.pull_request.merged == true
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.5.0]
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # SecrentManager에서 .env 생성
+      - name: Get SecretManager by name
+        run: |
+          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND |
+          jq -r '.SecretString' > .env
+
+      - name: Get Ready for Test
+        run: npm install
+
+      - name: Run Test
+        run: npm run test
+
+      - name: Slack Notification on Failure
+        uses: rtCamp/action-slack-notify@v2
+        if: failure()
+        env:
+          SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: ${{ job.status }}
+          MSG_MINIMAL: true
+          SLACK_TITLE: Staging Test Failed - ${{ github.repository }}
+          SLACK_MESSAGE: >
+            > Test Failed
+            - <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Check Here>
+
+
+            > Pull Request #${{ github.event.pull_request.number }} - [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
+            - <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
+
+  build:
+    # needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # SecrentManager에서 .env 생성
+      - name: Get SecretManager by name
+        run: |
+          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND |
+          jq -r '.SecretString' > .env
+
+      # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Amazon ECR에 로그인
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Docker 이미지 빌드 및 Amazon ECR에 푸시
+      - name: Build Docker Image & Push it to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f ./ci/Dockerfile -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # GitHub Actions에서 AWS CLI를 사용할 수 있도록 AWS 계정 정보를 환경 변수로 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Amazon ECR에 로그인
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # AWS ECR에 푸시한 Docker 이미지를 EKS 클러스터에 배포
+      - name: Deploy to EKS
+        uses: kodermax/kubectl-aws-eks@main
+        env:
+          KUBE_CONFIG_DATA: ${{ env.KUBE_CONFIG_DATA }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          KUBECTL_VERSION: 'v1.29.1'
+        with:
+          args: set image deployment/kbj-deployment kbj-container=929692293093.dkr.ecr.ap-northeast-2.amazonaws.com/staging-kbj-nestjs-backend-registry:$IMAGE_TAG
+
+      # AWS EKS 클러스터 배포 확인
+      - name: Verify Deployment
+        uses: kodermax/kubectl-aws-eks@main
+        env:
+          KUBE_CONFIG_DATA: ${{ env.KUBE_CONFIG_DATA }}
+        with:
+          args: rollout status deployment/kbj-deployment

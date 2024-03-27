@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kbj-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kbj
+  template:
+    metadata:
+      labels:
+        app: kbj
+    spec:
+      containers:
+        - name: kbj-container
+          image: 929692293093.dkr.ecr.ap-northeast-2.amazonaws.com/staging-kbj-nestjs-backend-registry:29e744263e48ef97d77c31a519cd03bc087f2b79
+          ports:
+            - containerPort: 3001

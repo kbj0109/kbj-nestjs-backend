@@ -1,0 +1,10 @@
+node_modules/
+
+# 빌드 위치
+dist/
+
+# 마크다운 파일
+*.md
+
+# DB 마이그레이션에서 자동으로 생성
+src/models/migrations
