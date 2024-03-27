@@ -10,3 +10,7 @@ export const enum NodeEnvEnum {
   Development = 'development',
   Production = 'production',
 }
+
+export const enum DatabaseEnum {
+  KBJ = 'kbj',
+}
