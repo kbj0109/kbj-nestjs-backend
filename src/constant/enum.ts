@@ -15,3 +15,8 @@ export const enum NodeEnvEnum {
 export const enum DatabaseEnum {
   KBJ = 'kbj',
 }
+
+/** Redis 연결 종류 */
+export const enum RedisEnum {
+  Main = 'main',
+}

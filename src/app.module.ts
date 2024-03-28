@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { connectDatabase } from './config/database';
-import { DatabaseEnum } from './constant/enum';
+import { DatabaseEnum, RedisEnum } from './constant/enum';
 import { UserController } from './controllers/user.controller';
 import { getModelList, getServiceList } from './config';
+import { connectRedis } from './config/redis';
 
 @Module({
   imports: [],
@@ -10,6 +11,7 @@ import { getModelList, getServiceList } from './config';
   providers: [
     //
     connectDatabase(DatabaseEnum.KBJ),
+    connectRedis(RedisEnum.Main),
 
     ...getServiceList(),
     ...getModelList(),

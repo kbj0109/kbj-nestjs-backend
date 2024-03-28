@@ -26,6 +26,8 @@ export const environment = {
   DB_READER_PASSWORD: '',
   DB_DATABASE: '',
 
+  REDIS_HOST: '',
+  REDIS_PORT: 6379,
 
   SLACK_OAUTH_TOKEN: '',
   SLACK_NOTIFICATION_CHANNEL: '',
@@ -55,6 +57,8 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
   environment.DB_READER_PASSWORD = process.env.DB_READER_PASSWORD as string;
   environment.DB_DATABASE = process.env.DB_DATABASE as string;
 
+  environment.REDIS_HOST = process.env.REDIS_HOST as string;
+  environment.REDIS_PORT = Number(process.env.REDIS_PORT) || 0;
 
   environment.SLACK_OAUTH_TOKEN = process.env.SLACK_OAUTH_TOKEN as string;
   environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL as string;
