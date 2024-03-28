@@ -27,8 +27,8 @@ export const connectDatabase = (type: DatabaseEnum): Provider => {
 };
 
 export const getDatabaseConfig = (type: DatabaseEnum): MysqlConnectionOptions => {
-  const entityPath = path.join(environment.MAIN_FOLDER_PATH, `./models/${type}/**/*.{js,ts}`);
-  const migrations = path.join(environment.MAIN_FOLDER_PATH, `./models/migrations/${type}/**/*.{js,ts}`);
+  const entityPath = path.join(environment.MAIN_FOLDER_PATH, `./src/models/schema/**/*.{js,ts}`);
+  const migrations = path.join(environment.MAIN_FOLDER_PATH, `./src/models/migrations/**/*.{js,ts}`);
 
   const defaultConfig = {
     name: type,

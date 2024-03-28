@@ -11,6 +11,7 @@ export const enum NodeEnvEnum {
   Production = 'production',
 }
 
+/* Database 연결 종류 */
 export const enum DatabaseEnum {
   KBJ = 'kbj',
 }
