@@ -1,22 +1,29 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { CreateUserInput, UserOutput } from './user.dto';
+import { CreateUserInput } from './user.dto';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { IUser } from '../models/schema/user.schema';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async CreateOne(@Body() body: CreateUserInput): Promise<UserOutput> {
-    const item = await this.userService.createOne(body);
+  @UsePipes(ZodValidationPipe)
+  async CreateOne(@Body() body: CreateUserInput): Promise<Omit<IUser, 'password'>> {
+    const item = await this.userService.createOne(body as any);
 
-    return item;
+    const { password: _, ...others } = item;
+
+    return others;
   }
 
   @Get(':id')
-  async ReadOne(@Param('id') id: string): Promise<UserOutput> {
+  async ReadOne(@Param('id') id: string): Promise<Omit<IUser, 'password'>> {
     const item = await this.userService.confirmOne({ id });
 
-    return item;
+    const { password: _, ...others } = item;
+
+    return others;
   }
 }
