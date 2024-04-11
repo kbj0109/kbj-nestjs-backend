@@ -4,11 +4,11 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "mobile",
+      "name": "debug",
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
+      "runtimeArgs": ["run", "dev"],
       "console": "integratedTerminal"
     }
   ]
