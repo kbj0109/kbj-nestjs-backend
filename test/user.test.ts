@@ -6,7 +6,7 @@ import { NodeEnvEnum } from '../src/constant/enum.constant';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
 import { IUser } from '../src/repositories/schema/user.schema';
-import { createRandomString } from '../src/utils';
+import { createRandomString, waitSeconds } from '../src/utils';
 
 const testing = setupTest();
 
@@ -71,6 +71,8 @@ describe('API /users 테스트', () => {
       .put(`/users/${item.id}`)
       .send({ name: newName })
       .set('Authorization', authorization);
+
+    await waitSeconds(1);
 
     const newItem = await userRepository.confirmOne({ username: data.username });
 

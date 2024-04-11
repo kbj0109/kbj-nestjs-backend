@@ -24,7 +24,7 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
 
     const [list, totalCount] = await this.repository.findAndCount({
       where: { userId },
-      relations: ['matchingUser'],
+      relations: ['matchingUser', 'message'],
       skip,
       take,
     });

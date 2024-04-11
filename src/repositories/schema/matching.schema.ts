@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IUser, UserSchema } from './user.schema';
 import { IMessage, MessageSchema } from './message.schema';
 
@@ -29,6 +29,7 @@ export class MatchingSchema implements IMatching {
   messageId: IMessage['id'];
 
   @OneToOne(() => MessageSchema, (message) => message.matching, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'messageId' })
   message?: MessageSchema;
 
   @ManyToOne(() => UserSchema, (user) => user.matchings, { createForeignKeyConstraints: false })
