@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import Redis from 'ioredis';
 import { environment } from './environment.config';
 import { getEnvironmentByAddress, printDeveloperMessage } from '../utils';
-import { RedisEnum } from '../constant/enum.constant';
+import { NodeEnvEnum, RedisEnum } from '../constant/enum.constant';
 import { sendSlackMessage } from './slack.config';
 
 export const connectRedis = (type: RedisEnum = RedisEnum.Main): Provider => {
@@ -115,6 +115,13 @@ export class RedisHelper {
         titleColor: 'warning',
       });
       return false;
+    }
+  }
+
+  /** Redis 연결 종료 - 테스트 환경에서만 실행 */
+  public async closeConnectionOnTest(): Promise<void> {
+    if (environment.NODE_ENV === NodeEnvEnum.Test) {
+      await this.redis.quit();
     }
   }
 }
