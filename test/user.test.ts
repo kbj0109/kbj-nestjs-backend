@@ -63,7 +63,7 @@ describe('API /users 테스트', () => {
     expect(response2.status).toBe(401);
   });
 
-  test('GET /users/:id 사용자 수정', async () => {
+  test('PUT /users/:id 사용자 수정', async () => {
     const newName = 'test' + createRandomString(3);
     const item = await userRepository.confirmOne({ username: data.username });
 

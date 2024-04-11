@@ -11,7 +11,7 @@
     "build": "nest build",
     "docker-build": "docker build -f ./ci/Dockerfile --tag kbj-nestjs-backend:1.0 .",
     "test": "jest --detectOpenHandles --runInBand --verbose --forceExit",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --detectOpenHandles --runInBand --verbose --forceExit --coverage",
     "format": "prettier --write .",
     "db-up": "docker-compose -f ./infra/docker-compose.yaml up -d",
     "db-down": "docker-compose down",
