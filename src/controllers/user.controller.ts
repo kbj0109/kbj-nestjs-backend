@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { UserConditionInput, UserCreateInput, UserUpdateInput, UsersOutput } from './user.dto';
+import { UserCreateInput, UserUpdateInput, UsersOutput } from './user.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter } from '../utils/dto';
 import { z } from 'zod';
@@ -12,7 +12,6 @@ import { Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto';
 import { NumericString_Regex } from '../constant/regex';
-import { NotEmpty } from '../types';
 
 @ApiTags('users')
 @Controller('users')
@@ -68,8 +67,13 @@ export class UserController {
   }
 
   @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
+  @TransactionWrapper(DatabaseEnum.KBJ)
   @Put(':id')
-  async UpdateOne(@Param() param: IdInput, @Body() body: UserUpdateInput): Promise<Omit<IUser, 'password'>> {
+  async UpdateOne(
+    @Param() param: IdInput,
+    @Body() body: UserUpdateInput,
+    @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
+  ): Promise<Omit<IUser, 'password'>> {
     validateParameter(param, { id: z.string() });
 
     validateParameter(body, {
@@ -83,7 +87,7 @@ export class UserController {
 
     const item = await this.userService.confirmOne({ id: param.id });
 
-    const newItem = await this.userService.updateUser(item.id, body);
+    const newItem = await this.userService.updateUser(item.id, body, { transaction });
 
     return new UserDTO(newItem);
   }

@@ -33,6 +33,10 @@ export const environment = {
   SLACK_OAUTH_TOKEN: '',
   SLACK_NOTIFICATION_CHANNEL: '',
 
+  JWT_SECRET_KEY: '',
+  ACCESS_TOKEN_EXPIRES_IN: '30m',
+  REFRESH_TOKEN_EXPIRES_IN: '30d',
+
   AWS_ACCESS_KEY: '',
   AWS_SECRET_KEY: '',
 };
@@ -64,6 +68,10 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
 
   environment.SLACK_OAUTH_TOKEN = process.env.SLACK_OAUTH_TOKEN as string;
   environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL as string;
+
+  environment.JWT_SECRET_KEY = process.env.JWT_SECRET_KEY as string;
+  environment.ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN as string;
+  environment.REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN as string;
 
   environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY as string;
   environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY as string;
