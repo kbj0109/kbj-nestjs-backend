@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { CreateUserInput } from './user.dto';
-import { GenderEnum, IUser, UserDTO } from '../models/schema/user.schema';
+import { CreateUserInput, UsersOutput } from './user.dto';
+import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter } from '../utils/dto';
 import { z } from 'zod';
 import { DATE_REGEX } from '../constant/date';
@@ -10,6 +10,8 @@ import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum';
 import { Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
+import { IdInput, ListInput } from '../constant/dto';
+import { NumericString_Regex } from '../constant/regex';
 
 @ApiTags('users')
 @Controller('users')
@@ -38,17 +40,29 @@ export class UserController {
     return new UserDTO(item);
   }
 
-  @Get(':id')
-  async ReadOne(@Param('id') id: string): Promise<Omit<IUser, 'password'>> {
-    const item = await this.userService.confirmOne({ id });
+  @ApiResponse({ status: 200, type: UsersOutput })
+  @Get()
+  async ReadMany(@Query() query: ListInput): Promise<{ totalCount: number; list: Omit<IUser, 'password'>[] }> {
+    const { skip, take } = validateParameter(query, {
+      skip: z.string().regex(NumericString_Regex).transform(Number).optional(),
+      take: z.string().regex(NumericString_Regex).transform(Number).optional(),
+    });
 
-    const { password: _, ...others } = item;
+    const { totalCount, list } = await this.userService.readManyAndTotalCount(
+      {},
+      { skip: skip as number, take: take as number },
+    );
 
-    return others;
+    return { totalCount, list: list.map((item) => new UserDTO(item)) };
   }
 
-  @Get()
-  ReadMany(): any[] {
-    return [];
+  @ApiResponse({ status: 201, type: OmitType(UserDTO, ['password']) })
+  @Get(':id')
+  async ReadOne(@Param() param: IdInput): Promise<Omit<IUser, 'password'>> {
+    validateParameter(param, { id: z.string() });
+
+    const item = await this.userService.confirmOne(param);
+
+    return new UserDTO(item);
   }
 }

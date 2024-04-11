@@ -6,7 +6,7 @@ import { DatabaseEnum } from '../constant/enum';
 import { IUser, UserSchema } from './schema/user.schema';
 
 @Injectable()
-export class UserModel extends BaseRepository<IUser, UserSchema> {
+export class UserRepository extends BaseRepository<IUser, UserSchema> {
   constructor(
     @InjectDatasource(DatabaseEnum.KBJ)
     private readonly dataSource: DataSource,

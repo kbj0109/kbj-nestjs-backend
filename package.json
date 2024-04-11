@@ -17,7 +17,7 @@
     "db-down": "docker-compose down",
     "======MIGRATION=======": "=======================================================",
     "typeorm": "ts-node ./src/config/system-warn.ts && sleep 5 && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource ./src/config/system-migration.ts",
-    "migration:generate:kbj": "npm run migration:apply:kbj && MIGRATION_PATH=kbj npm run typeorm migration:generate ./src/models/migrations/kbj/Migration",
+    "migration:generate:kbj": "npm run migration:apply:kbj && MIGRATION_PATH=kbj npm run typeorm migration:generate ./src/repositories/migrations/kbj/Migration",
     "migration:apply:kbj": "MIGRATION_PATH=kbj npm run typeorm migration:run",
     "migration:revert:kbj": "MIGRATION_PATH=kbj npm run typeorm migration:revert"
   },

@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 import { UserController } from '../controllers/user.controller';
-import { UserModel } from '../models/user.model';
+import { UserRepository } from '../repositories/user.repository';
 import { UserService } from '../services/user.service';
 
 export const getControllerList = (): Type[] => {
@@ -12,5 +12,5 @@ export const getServiceList = (): Type[] => {
 };
 
 export const getModelList = (): Type[] => {
-  return [UserModel];
+  return [UserRepository];
 };

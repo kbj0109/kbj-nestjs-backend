@@ -61,4 +61,9 @@ export class BaseService {
   public upsertOne = (..._param: any): Promise<any> | any => {
     throw new NotImplementedException();
   };
+
+  /** @deprecated ReadManyAndTotalCount 1개 */
+  public readManyAndTotalCount = (..._param: any): Promise<any> | any => {
+    throw new NotImplementedException();
+  };
 }

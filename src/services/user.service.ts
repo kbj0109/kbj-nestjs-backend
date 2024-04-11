@@ -1,17 +1,20 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { BaseService } from '.';
-import { UserModel } from '../models/user.model';
-import { IUser } from '../models/schema/user.schema';
+import { UserRepository } from '../repositories/user.repository';
+import { IUser } from '../repositories/schema/user.schema';
 import { getEncryptValue } from '../utils/encrypt';
 import { OnlyData, QueryTransactionOption } from '../types';
 
 @Injectable()
 export class UserService extends BaseService {
-  constructor(private readonly userRepository: UserModel) {
+  constructor(private readonly userRepository: UserRepository) {
     super();
   }
 
+  count = this.userRepository.count;
   readOne = this.userRepository.readOne;
+  readMany = this.userRepository.readMany;
+  readManyAndTotalCount = this.userRepository.readManyAndTotalCount;
   confirmOne = this.userRepository.confirmOne;
 
   createOne = async (data: OnlyData<IUser>, option?: QueryTransactionOption): Promise<IUser> => {

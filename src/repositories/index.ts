@@ -272,19 +272,19 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
     const allCondition = { where, skip, take, select, order, withDeleted };
 
     if (transaction) {
-      const [list, totalCount] = await Promise.all([
-        transaction.manager.find(this.repository.target, allCondition),
+      const [totalCount, list] = await Promise.all([
         transaction.manager.count(this.repository.target, { where, withDeleted }),
+        transaction.manager.find(this.repository.target, allCondition),
       ]);
 
-      return { list, totalCount };
+      return { totalCount, list };
     }
 
-    const [list, totalCount] = await Promise.all([
-      this.repository.find(allCondition as any) as any, // # 편의상 Type 비틀기
+    const [totalCount, list] = await Promise.all([
       this.repository.count({ where: where as any, withDeleted }),
+      this.repository.find(allCondition as any) as any, // # 편의상 Type 비틀기
     ]);
 
-    return { list, totalCount };
+    return { totalCount, list };
   };
 }
