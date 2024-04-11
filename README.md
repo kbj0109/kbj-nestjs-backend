@@ -8,6 +8,7 @@
 8. 기본적인 CRUD + List - Done
 9. 로그인 기능 - Done
 10. 권한 가드 확인 - Done
+11. CI/CD 자동 백머지 - Done
 
-11. 테이블 Join 경우의 수
-12. CI/CD 자동 백머지
+
+12. 테이블 Join 경우의 수

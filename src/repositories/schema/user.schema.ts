@@ -22,7 +22,7 @@ export interface IUser {
 }
 
 @Entity({ name: 'users' })
-export class UserSchema {
+export class UserSchema implements IUser {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id: string;
 

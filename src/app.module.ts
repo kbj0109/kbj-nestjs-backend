@@ -5,10 +5,11 @@ import { UserController } from './controllers/user.controller';
 import { getOtherList, getRepositoryList, getServiceList } from './config';
 import { connectRedis } from './config/redis';
 import { AuthController } from './controllers/auth.controller';
+import { MessageController } from './controllers/message.controller';
 
 @Module({
   imports: [],
-  controllers: [UserController, AuthController],
+  controllers: [UserController, AuthController, MessageController],
   providers: [
     connectDatabase(DatabaseEnum.KBJ),
     connectRedis(RedisEnum.Main),
