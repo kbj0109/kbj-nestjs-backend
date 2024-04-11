@@ -8,7 +8,7 @@ const SlackChannelConfig = {
 };
 
 /** Slack 메세지 전송 요청시 리턴 타입 */
-export type SlackResponse = { isSent: boolean; error?: any };
+type SlackResponse = { isSent: boolean; error?: any };
 
 /** Slack 메세지에 환경 정보 타이틀 추가  */
 const setEnvToTile = (title: string): string => {
