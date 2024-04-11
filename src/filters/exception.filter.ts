@@ -1,28 +1,17 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, ValidationError } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
 import { environment } from '../config/environment';
 import { BadParameterException, possibleExceptionList } from '../constant/exception';
 import { Request, Response } from 'express';
 import { ServerEnvEnum } from '../constant/enum';
+import { ZodError } from 'zod';
+import _ from 'lodash';
 
 const defaultException = new InternalServerErrorException();
 
-/** 유효성 검사에서 발생하는 Exception Handler */
-export const badParamRequestExceptionHandler = (errors: ValidationError[]): BadParameterException => {
-  const badParamList = errors.map((one) => one.property);
-
-  /** 운영 환경 아니면 실패 이유 알려주기 */
-  const hint =
-    environment.SERVER_ENV !== ServerEnvEnum.Production
-      ? errors.map((one) => one.constraints).flatMap((obj) => Object.values(obj || {}))
-      : undefined;
-
-  return new BadParameterException({ data: { badParamList, hint } });
-};
-
 /** REST API 요청 Exception Handler */
 @Catch()
-export class HttpExceptionFilter implements ExceptionFilter {
+export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost): void {
     const isNotFoundApiException = exception.message.startsWith('Cannot') && exception.status === 404;
 
@@ -35,6 +24,28 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+
+    /** 유효성 검사 - Zod Validation Exception 처리 */
+    if (exception instanceof ZodError) {
+      const errors = exception.errors;
+
+      const badParamList = _.flatten(exception.errors.map((one) => one.path)) as string[];
+      const hint = errors.map((one) => `${one.path[0]} - ${one.message}`);
+
+      const badParameterException = new BadParameterException({ data: { badParamList, hint } });
+
+      response.status(badParameterException.getStatus()).json({
+        httpMethod: request.method,
+        path: request.url,
+        code: badParameterException.name,
+        status: badParameterException.getStatus(),
+        message: badParameterException.message,
+        data: (badParameterException.getResponse() as { data: object }).data || {},
+        stack: environment.SERVER_ENV !== ServerEnvEnum.Production ? exception.stack : undefined,
+      });
+
+      return;
+    }
 
     /** Http Exception 이 아닌 에러 처리 */
     if (exception instanceof HttpException === false) {
@@ -50,8 +61,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return;
     }
 
-    const httpException =
-      possibleExceptionList.find((one) => one.getStatus() === exception.getStatus()) || defaultException;
+    const httpException = possibleExceptionList.find((one) => one.name === exception.name) || defaultException;
 
     response.status(httpException.getStatus()).json({
       httpMethod: request.method,
@@ -59,6 +69,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       code: httpException.name,
       status: httpException.getStatus(),
       message: exception.message || httpException.message,
+      data: (exception.getResponse() as { data: object }).data || {},
       stack: environment.SERVER_ENV !== ServerEnvEnum.Production ? httpException.stack : undefined,
     });
   }
