@@ -6,13 +6,15 @@ import { AuthService } from '../services/auth.service';
 import { SignInJwtStrategy } from '../guards/user.auth.guard.';
 import { MessageRepository } from '../repositories/Message.repository';
 import { MessageService } from '../services/message.service';
+import { MatchingService } from '../services/matching.service';
+import { MatchingRepository } from '../repositories/matching.repository';
 
 export const getServiceList = (): Type[] => {
-  return [UserService, AuthService, MessageService];
+  return [UserService, AuthService, MessageService, MatchingService];
 };
 
 export const getRepositoryList = (): Type[] => {
-  return [UserRepository, AuthRepository, MessageRepository];
+  return [UserRepository, AuthRepository, MessageRepository, MatchingRepository];
 };
 
 export const getOtherList = (): Type[] => {
