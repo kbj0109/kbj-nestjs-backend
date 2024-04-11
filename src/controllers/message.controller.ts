@@ -7,7 +7,7 @@ import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
 import { validateParameter, validateNumericString } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
-import { MessageOutput, MessageSendInput, MessageUpdateInput } from './message.dto';
+import { MessageOutput, MessageSendInput, MessageUpdateInput } from './message.controller.dto';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { UserService } from '../services/user.service';
 import { QueryRunner } from 'typeorm';

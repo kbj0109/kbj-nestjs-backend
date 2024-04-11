@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { validateParameter } from '../utils/dto.util';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthRenewInput, AuthRenewOutput, AuthSignInInput, AuthSignInOutput } from './auth.dto';
+import { AuthRenewInput, AuthRenewOutput, AuthSignInInput, AuthSignInOutput } from './auth.controller.dto';
 import { AuthService } from '../services/auth.service';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { CurrentUser } from '../decorators/parameter.decorator';
