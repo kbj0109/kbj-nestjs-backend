@@ -15,6 +15,7 @@ export const environment = {
 
   MAIN_FOLDER_PATH: '', // # 실제 Root 폴더 Path - ex) /Users/goodoc/goodoc-api-clinic/src
 
+  DB_SYNC_CHECK: false,
   DB_FULL_QUERY_LOG: false, // DB 쿼리 전체 로그 여부
   DB_WRITER_HOST: '',
   DB_WRITER_PORT: 3306,
@@ -46,6 +47,7 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
 
   environment.MAIN_FOLDER_PATH = path.join(__dirname, '../../');
 
+  environment.DB_SYNC_CHECK = process.env.DB_SYNC_CHECK === 'true';
   environment.DB_FULL_QUERY_LOG = process.env.DB_FULL_QUERY_LOG === 'true';
   environment.DB_WRITER_HOST = process.env.DB_WRITER_HOST as string;
   environment.DB_WRITER_PORT = Number(process.env.DB_WRITER_PORT);
