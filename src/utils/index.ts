@@ -1,6 +1,17 @@
 import chalk from 'chalk';
 import { DateTimezone } from '../constant/date';
 import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum';
+import randomstring from 'randomstring';
+
+/** 문자/숫자가 섞인 랜덤 글자 생성 */
+export const createRandomString = (length: number): string => {
+  return randomstring.generate(length).toLowerCase();
+};
+
+/** 숫자만으로 이루어진 랜덤 글자 생성 */
+export const createRandomNumericString = (length: number): string => {
+  return randomstring.generate({ length, charset: 'numeric' });
+};
 
 /** 글자에서 특정 텍스트를 다른 텍스트로 교체 */
 export const replaceText = (value: string, from: string, to: string): string => {
