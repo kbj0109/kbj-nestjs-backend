@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { UserCreateInput, UserUpdateInput, UsersOutput } from './user.dto';
+import { UserCreateInput, UserOutput, UserUpdateInput, UsersOutput } from './user.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter } from '../utils/dto.util';
 import { z } from 'zod';
 import { DATE_REGEX } from '../constant/date.constant';
-import { ApiBearerAuth, ApiResponse, ApiTags, OmitType } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
 import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
@@ -20,13 +20,13 @@ import { Request } from 'express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiResponse({ status: 201, type: OmitType(UserDTO, ['password']) })
+  @ApiResponse({ status: 201, type: UserOutput })
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Post()
   async CreateOne(
     @Body() body: UserCreateInput,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
-  ): Promise<Omit<IUser, 'password'>> {
+  ): Promise<UserOutput> {
     validateParameter(body, {
       username: z.string(),
       password: z.string(),
@@ -58,7 +58,7 @@ export class UserController {
     return { totalCount, list: list.map((item) => new UserDTO(item)) };
   }
 
-  @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
+  @ApiResponse({ status: 200, type: UserOutput })
   @Get(':id')
   async ReadOne(@Param() param: IdInput): Promise<Omit<IUser, 'password'>> {
     validateParameter(param, { id: z.string() });
@@ -68,7 +68,7 @@ export class UserController {
     return new UserDTO(item);
   }
 
-  @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
+  @ApiResponse({ status: 200, type: UserOutput })
   @ApiBearerAuth()
   @MainAuthGuard()
   @TransactionWrapper(DatabaseEnum.KBJ)
