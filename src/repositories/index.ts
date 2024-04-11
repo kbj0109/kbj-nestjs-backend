@@ -236,7 +236,8 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
     option?: QueryTransactionOption & QuerySelectOption<K> & QueryOrderOption<T> & Pick<FindOneOptions, 'withDeleted'>,
   ): Promise<Pick<T, K>> => {
     const item = await this.readOne(condition, option);
-    if (!item) throw new NotFoundException({ message: `${this.repository.metadata.name} Not Found` });
+
+    if (!item) throw new NotFoundException({ message: `${this.repository.metadata.tablePath} Not Found` });
 
     return item;
   };

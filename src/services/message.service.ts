@@ -25,8 +25,8 @@ export class MessageService extends BaseService {
 
     // 이미 매칭된 경우에는 메세지를 보낼 수 없음
     const [matching1, matching2] = await Promise.all([
-      this.matchingRepository.readOne({ toUserId, fromUserId }),
-      this.matchingRepository.readOne({ fromUserId: toUserId, toUserId: fromUserId }),
+      this.matchingRepository.readOne({ matchingUserId: toUserId, userId: fromUserId }),
+      this.matchingRepository.readOne({ userId: toUserId, matchingUserId: fromUserId }),
     ]);
     if (matching1 || matching2) {
       return false;
@@ -34,7 +34,7 @@ export class MessageService extends BaseService {
 
     // 새로운 메세지를 보내려면 더 높은 레벨의 메세지만 가능
     const item = await this.messageRepository.readOne(
-      { toUserId, fromUserId, messageStatus: MessageStatusEnum.accepted },
+      { toUserId, fromUserId, messageStatus: MessageStatusEnum.activated },
       { order: { id: 'DESC' } },
     );
 
@@ -82,7 +82,10 @@ export class MessageService extends BaseService {
     await this.messageRepository.update({ id }, { messageStatus, reason }, option);
 
     if (messageStatus === MessageStatusEnum.accepted) {
-      await this.matchingRepository.createOne({ messageId: id, fromUserId, toUserId });
+      await Promise.all([
+        this.matchingRepository.createOne({ messageId: id, userId: fromUserId, matchingUserId: toUserId }, option),
+        this.matchingRepository.createOne({ messageId: id, userId: toUserId, matchingUserId: fromUserId }, option),
+      ]);
     }
   };
 }

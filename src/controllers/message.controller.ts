@@ -50,6 +50,7 @@ export class MessageController {
 
   @ApiOperation({ summary: '메세지 승락/거절' })
   @ApiResponse({ status: 200, type: MessageOutput })
+  @UserAuthGuard()
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Put(':id/status')
   async updateStatus(

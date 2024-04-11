@@ -1,6 +1,5 @@
 import { Type } from '@nestjs/common';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { isNumber } from 'lodash';
 import { ZodNumber, ZodOptional, ZodString, z } from 'zod';
 
 /* DTO - PickType 에서 자동으로 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' 제거 */
