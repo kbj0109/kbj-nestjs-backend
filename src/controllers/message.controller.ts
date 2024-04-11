@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessageService } from '../services/message.service';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
@@ -8,11 +8,12 @@ import { validateParameter, validateNumericString } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
 import { MessageOutput, MessageSendInput, MessageUpdateInput } from './message.dto';
-import { MainAuthGuard } from '../guards/sign-in.guard.';
+import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { UserService } from '../services/user.service';
 import { QueryRunner } from 'typeorm';
 import { IdInput } from '../constant/dto.constant';
 
+@ApiBearerAuth()
 @ApiTags('messages')
 @Controller('messages')
 export class MessageController {
@@ -26,7 +27,7 @@ export class MessageController {
     description: '연결되지 않은 사용자와, 이전 메세지보다 높은 레벨의 메세지만 작성 가능',
   })
   @ApiResponse({ status: 201, type: MessageOutput })
-  @MainAuthGuard()
+  @UserAuthGuard()
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Post('send')
   async sendMessageToUser(

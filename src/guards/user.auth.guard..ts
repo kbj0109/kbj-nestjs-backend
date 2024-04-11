@@ -7,7 +7,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { InvalidTokenException } from '../constant/exception.constant';
 
 /** 토큰 인증 Guard - Option 으로 만료 확인 여부, 아이디 존재 유무를 확인 */
-export function MainAuthGuard(option?: {
+export function UserAuthGuard(option?: {
   allowEmptyToken?: boolean; // 비로그인 사용자 허용 여부
   allowExpiredToken?: boolean; // 만료 토큰 허용 여부
   checkUserExist?: boolean; // 토큰 내 User Id의 User 유무 확인 여부

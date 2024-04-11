@@ -12,7 +12,7 @@ import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto.constant';
 import { NumericString_Regex } from '../constant/regex.constant';
-import { MainAuthGuard } from '../guards/sign-in.guard.';
+import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { Request } from 'express';
 
 @ApiTags('users')
@@ -70,7 +70,7 @@ export class UserController {
 
   @ApiResponse({ status: 200, type: UserOutput })
   @ApiBearerAuth()
-  @MainAuthGuard()
+  @UserAuthGuard()
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Put(':id')
   async UpdateOne(

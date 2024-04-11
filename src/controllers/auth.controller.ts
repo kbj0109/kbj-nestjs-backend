@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthRenewInput, AuthRenewOutput, AuthSignInInput, AuthSignInOutput } from './auth.dto';
 import { AuthService } from '../services/auth.service';
-import { MainAuthGuard } from '../guards/sign-in.guard.';
+import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { CurrentUser } from '../decorators/parameter.decorator';
 
 @ApiTags('auths')
@@ -26,7 +26,7 @@ export class AuthController {
 
   @ApiResponse({ status: 201, type: AuthRenewOutput })
   @ApiBearerAuth()
-  @MainAuthGuard({ allowExpiredToken: true })
+  @UserAuthGuard({ allowExpiredToken: true })
   @Post('renew')
   async RenewAccessToken(
     @Body() body: AuthRenewInput,
