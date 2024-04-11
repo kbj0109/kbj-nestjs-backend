@@ -26,6 +26,10 @@ export const environment = {
   DB_READER_PASSWORD: '',
   DB_DATABASE: '',
 
+
+  SLACK_OAUTH_TOKEN: '',
+  SLACK_NOTIFICATION_CHANNEL: '',
+
   AWS_ACCESS_KEY: '',
   AWS_SECRET_KEY: '',
 };
@@ -50,6 +54,10 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
   environment.DB_READER_USERNAME = process.env.DB_READER_USERNAME as string;
   environment.DB_READER_PASSWORD = process.env.DB_READER_PASSWORD as string;
   environment.DB_DATABASE = process.env.DB_DATABASE as string;
+
+
+  environment.SLACK_OAUTH_TOKEN = process.env.SLACK_OAUTH_TOKEN as string;
+  environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL as string;
 
   environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY as string;
   environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY as string;
