@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { z } from 'zod';
+import { ZodString, z } from 'zod';
 
 /* DTO - PickType 에서 자동으로 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' 제거 */
 export function PickDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>(
@@ -26,4 +26,9 @@ type ValidateObject<T> = Required<{ [K in keyof T]: z.ZodType<T[K]> }>;
 /* 유효성 검사 */
 export const validateParameter = <T>(data: T, validator: ValidateObject<T>): T => {
   return z.object(validator).parse(data) as any;
+};
+
+/* 유효성 검사 - String 값이 Numeric 한지   */
+export const validateNumericString = (): ZodString => {
+  return z.string().regex(/^\d+$/);
 };

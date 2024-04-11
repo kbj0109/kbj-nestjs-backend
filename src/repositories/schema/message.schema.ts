@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IUser } from './user.schema';
 
-export enum MessageTypeEnum {
-  normal = 'normal',
-  high = 'high',
+export enum MessageLevelEnum {
+  normal = 3,
+  high = 7,
 }
 
 export enum MessageStatusEnum {
@@ -21,7 +21,7 @@ export interface IMessage {
   deletedAt?: Date;
   fromUserId: IUser['id'];
   toUserId: IUser['id'];
-  messageType: MessageTypeEnum;
+  messageLevel: MessageLevelEnum;
   messageStatus: MessageStatusEnum;
   text: string;
   reason?: string;
@@ -47,8 +47,8 @@ export class MessageSchema implements IMessage {
   @Column({ type: 'bigint' })
   toUserId: string;
 
-  @Column('varchar')
-  messageType: MessageTypeEnum;
+  @Column('int')
+  messageLevel: MessageLevelEnum;
 
   @Column('varchar')
   messageStatus: MessageStatusEnum;
@@ -79,8 +79,8 @@ export class MessageDTO implements Required<IMessage> {
   @ApiProperty()
   toUserId: string;
 
-  @ApiProperty({ enum: MessageTypeEnum })
-  messageType: MessageTypeEnum;
+  @ApiProperty({ enum: MessageLevelEnum })
+  messageLevel: MessageLevelEnum;
 
   @ApiProperty({ enum: MessageStatusEnum })
   messageStatus: MessageStatusEnum;

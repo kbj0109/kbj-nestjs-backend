@@ -41,7 +41,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         status: badParameterException.getStatus(),
         message: badParameterException.message,
         data: (badParameterException.getResponse() as { data: object }).data || {},
-        stack: environment.SERVER_ENV !== ServerEnvEnum.Production ? exception.stack : undefined,
+        // stack: environment.SERVER_ENV !== ServerEnvEnum.Production ? exception.stack : undefined,
       });
 
       return;
