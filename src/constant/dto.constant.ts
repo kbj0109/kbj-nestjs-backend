@@ -7,8 +7,8 @@ export class IdInput {
 
 export class ListInput {
   @ApiProperty({ required: false, type: Number })
-  skip?: number | string;
+  skip?: number;
 
   @ApiProperty({ required: false, type: Number })
-  take?: number | string;
+  take?: number;
 }

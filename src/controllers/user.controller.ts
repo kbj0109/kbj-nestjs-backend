@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { UserCreateInput, UserOutput, UserUpdateInput, UsersOutput } from './user.dto';
+import { UserCreateInput, UserOutput, UserUpdateInput, UsersOutput } from './user.controller.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
-import { validateParameter } from '../utils/dto.util';
+import { validateParameter, validateValueToInt } from '../utils/dto.util';
 import { z } from 'zod';
 import { DATE_REGEX } from '../constant/date.constant';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,7 +11,6 @@ import { DatabaseEnum } from '../constant/enum.constant';
 import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto.constant';
-import { NumericString_Regex } from '../constant/regex.constant';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { Request } from 'express';
 
@@ -46,14 +45,11 @@ export class UserController {
   @Get()
   async ReadMany(@Query() query: ListInput): Promise<{ totalCount: number; list: Omit<IUser, 'password'>[] }> {
     const { skip, take } = validateParameter(query, {
-      skip: z.string().regex(NumericString_Regex).transform(Number).optional(),
-      take: z.string().regex(NumericString_Regex).transform(Number).optional(),
+      skip: validateValueToInt({ defaultValue: 0, optional: true }),
+      take: validateValueToInt({ defaultValue: 10, max: 100 }),
     });
 
-    const { totalCount, list } = await this.userService.readManyAndTotalCount(
-      {},
-      { skip: skip as number, take: take as number },
-    );
+    const { totalCount, list } = await this.userService.readManyAndTotalCount({}, { skip, take });
 
     return { totalCount, list: list.map((item) => new UserDTO(item)) };
   }

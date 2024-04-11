@@ -1,6 +1,7 @@
 import { Type } from '@nestjs/common';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { ZodString, z } from 'zod';
+import { isNumber } from 'lodash';
+import { ZodNumber, ZodOptional, ZodString, z } from 'zod';
 
 /* DTO - PickType 에서 자동으로 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' 제거 */
 export function PickDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>(
@@ -29,6 +30,43 @@ export const validateParameter = <T>(data: T, validator: ValidateObject<T>): T =
 };
 
 /* 유효성 검사 - String 값이 Numeric 한지   */
-export const validateNumericString = (): ZodString => {
-  return z.string().regex(/^\d+$/);
-};
+export function validateStringIsNumeric(config: { optional: true }): ZodOptional<ZodString>;
+export function validateStringIsNumeric(config?: { optional: false }): ZodString;
+export function validateStringIsNumeric(config = { optional: false }): ZodString | ZodOptional<ZodString> {
+  const { optional = false } = config;
+
+  return optional
+    ? (z.string().regex(/^\d+$/).optional() as ZodOptional<ZodString>)
+    : (z.string().regex(/^\d+$/) as ZodString);
+}
+
+type ValidateValueToInt_Option = { optional?: boolean; defaultValue?: number; min?: number; max?: number };
+
+/* 유효성 검사 - 값이 Int 인지 + Int 변환   */
+export function validateValueToInt(config: ValidateValueToInt_Option & { optional?: true }): ZodOptional<ZodNumber>;
+export function validateValueToInt(config?: ValidateValueToInt_Option & { optional?: false }): ZodNumber;
+export function validateValueToInt(
+  config: ValidateValueToInt_Option = { optional: false },
+): ZodNumber | ZodOptional<ZodNumber> {
+  const { optional = false, defaultValue, min, max } = config;
+
+  let schema: any = z.coerce.number();
+
+  if (min !== undefined) {
+    schema = schema.min(min);
+  }
+
+  if (max !== undefined) {
+    schema = schema.max(max);
+  }
+
+  if (optional) {
+    schema = schema.optional();
+  }
+
+  if (defaultValue !== undefined) {
+    schema = schema.default(defaultValue);
+  }
+
+  return schema;
+}

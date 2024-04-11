@@ -4,7 +4,7 @@ import { MessageService } from '../services/message.service';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
 import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
-import { validateParameter, validateNumericString } from '../utils/dto.util';
+import { validateParameter, validateStringIsNumeric } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
 import { MessageOutput, MessageSendInput, MessageUpdateInput } from './message.controller.dto';
@@ -36,7 +36,7 @@ export class MessageController {
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<MessageOutput> {
     validateParameter(body, {
-      toUserId: validateNumericString(),
+      toUserId: validateStringIsNumeric(),
       messageLevel: z.number().max(MessageLevelEnum.high),
       text: z.string(),
     });
@@ -58,7 +58,7 @@ export class MessageController {
     @CurrentUser() user: JwtType,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<void> {
-    validateParameter(param, { id: validateNumericString() });
+    validateParameter(param, { id: validateStringIsNumeric() });
     validateParameter(body, {
       messageStatus: z.enum([MessageStatusEnum.accepted, MessageStatusEnum.rejected]),
       reason: z.string(),
