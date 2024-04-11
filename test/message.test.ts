@@ -9,6 +9,7 @@ import { IUser } from '../src/repositories/schema/user.schema';
 import { MessageSendInput, MessagesOutput } from '../src/controllers/message.controller.dto';
 import { IMessage, MessageLevelEnum, MessageStatusEnum } from '../src/repositories/schema/message.schema';
 import { MessageRepository } from '../src/repositories/Message.repository';
+import { waitSeconds } from '../src/utils';
 
 const testing = setupTest();
 
@@ -70,6 +71,7 @@ describe('API /messages 테스트', () => {
     message2 = response4.body;
 
     // 메세지 추가 작성 후 이전 메세지 비활성화
+    await waitSeconds(1);
     const item = await messageRepository.confirmOne({ id: response.body.id });
     expect(item.messageStatus).toBe(MessageStatusEnum.deactivated);
   });

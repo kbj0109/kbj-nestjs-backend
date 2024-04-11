@@ -48,3 +48,12 @@ export const getEnvironmentByAddress = (address: string): ServerEnvEnum => {
 
   return ServerEnvEnum.Production;
 };
+
+/** 초 단위로 시간 끌기 */
+export const waitSeconds = (second = 1): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, second * 1000);
+  });
+};
