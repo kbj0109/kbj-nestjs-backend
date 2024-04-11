@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IUser } from './user.schema';
+import { MatchingSchema } from './matching.schema';
 
 export enum MessageLevelEnum {
   normal = 3,
@@ -58,6 +67,9 @@ export class MessageSchema implements IMessage {
 
   @Column('text', { nullable: true })
   reason?: string;
+
+  @OneToOne(() => MatchingSchema, (matching) => matching.message)
+  matching?: MatchingSchema;
 }
 
 export class MessageDTO implements Required<IMessage> {

@@ -13,10 +13,10 @@ export class MatchingService extends BaseService {
   confirmOne = this.matchingRepository.confirmOne;
   readManyAndTotalCount = this.matchingRepository.readManyAndTotalCount;
 
-  readManyAndTotalCountWithUser = (
+  readManyAndTotalCountWithUserAndMessage = (
     userId: IUser['id'],
     option?: QueryListOption,
-  ): ReturnType<MatchingRepository['readManyAndTotalCountWithUser']> => {
-    return this.matchingRepository.readManyAndTotalCountWithUser(userId, option);
+  ): ReturnType<MatchingRepository['readManyAndTotalCountWithUserAndMessage']> => {
+    return this.matchingRepository.readManyAndTotalCountWithUserAndMessage(userId, option);
   };
 }

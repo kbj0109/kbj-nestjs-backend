@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IUser, UserSchema } from './user.schema';
-import { IMessage } from './message.schema';
+import { IMessage, MessageSchema } from './message.schema';
 
 export interface IMatching {
   id: string;
@@ -27,6 +27,9 @@ export class MatchingSchema implements IMatching {
 
   @Column('bigint')
   messageId: IMessage['id'];
+
+  @OneToOne(() => MessageSchema, (message) => message.matching, { createForeignKeyConstraints: false })
+  message?: MessageSchema;
 
   @ManyToOne(() => UserSchema, (user) => user.matchings, { createForeignKeyConstraints: false })
   user?: UserSchema;

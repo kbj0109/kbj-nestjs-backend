@@ -16,7 +16,7 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
     super(dataSource, MatchingSchema);
   }
 
-  readManyAndTotalCountWithUser = async (
+  readManyAndTotalCountWithUserAndMessage = async (
     userId: IUser['id'],
     option?: QueryListOption,
   ): Promise<{ list: (IMatching & { matchingUser: IUser })[]; totalCount: number }> => {
