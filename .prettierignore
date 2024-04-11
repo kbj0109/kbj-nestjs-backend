@@ -7,4 +7,4 @@ dist/
 *.md
 
 # DB 마이그레이션에서 자동으로 생성
-src/models/migrations
+src/repositories/migrations
