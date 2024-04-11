@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { environment } from '../config/environment';
-import { InvalidTokenException } from '../constant/exception';
+import { environment } from '../config/environment.config';
+import { InvalidTokenException } from '../constant/exception.constant';
 
 /** 암호화 */
 export const getEncryptValue = (value: string): Promise<string> => {

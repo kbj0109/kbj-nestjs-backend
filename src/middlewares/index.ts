@@ -1,12 +1,12 @@
 import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
 import express from 'express';
 import { AllExceptionFilter } from '../filters/exception.filter';
-import { environment } from '../config/environment';
-import { ServerEnvEnum } from '../constant/enum';
+import { environment } from '../config/environment.config';
+import { ServerEnvEnum } from '../constant/enum.constant';
 import { TimeoutInterceptor } from '../interceptors/timeout.interceptor';
 import { LoggingInterceptor } from '../interceptors/logging.interceptor';
-import { setRequestIp } from './header';
-import { setApiDocument } from './swagger';
+import { setRequestIp } from './header.middleware';
+import { setApiDocument } from './swagger.middleware';
 import _ from 'lodash';
 import { Reflector } from '@nestjs/core';
 

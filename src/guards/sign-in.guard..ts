@@ -1,10 +1,10 @@
 import { applyDecorators, ExecutionContext, SetMetadata, UseGuards } from '@nestjs/common';
-import { environment } from '../config/environment';
+import { environment } from '../config/environment.config';
 import { ConfirmExistenceGuard, ExpiredTokenGuard, SignInGuard } from './auth.guard';
 import { Request } from 'express';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { InvalidTokenException } from '../constant/exception';
+import { InvalidTokenException } from '../constant/exception.constant';
 
 /** 토큰 인증 Guard - Option 으로 만료 확인 여부, 아이디 존재 유무를 확인 */
 export function MainAuthGuard(option?: {

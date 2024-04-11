@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { BaseService } from '.';
 import { UserRepository } from '../repositories/user.repository';
 import { IUser } from '../repositories/schema/user.schema';
-import { getEncryptValue } from '../utils/encrypt';
+import { getEncryptValue } from '../utils/encrypt.util';
 import { OnlyData, QueryTransactionOption } from '../types';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
-import { environment } from '../config/environment';
+import { environment } from '../config/environment.config';
 import { printDeveloperMessage } from '../utils';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { NodeEnvEnum } from '../constant/enum';
+import { NodeEnvEnum } from '../constant/enum.constant';
 
 export const setApiDocument = (app: INestApplication): void => {
   if (environment.IS_LOCAL || environment.NODE_ENV !== NodeEnvEnum.Production) {

@@ -1,10 +1,10 @@
-import { environment, setEnvironment } from './config/environment';
+import { environment, setEnvironment } from './config/environment.config';
 setEnvironment();
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { printDeveloperMessage } from './utils';
-import { checkAllDatabaseSync } from './config/system-database';
+import { checkAllDatabaseSync } from './config/system-database.config';
 import { setMiddleware } from './middlewares';
 
 async function bootstrap(): Promise<void> {

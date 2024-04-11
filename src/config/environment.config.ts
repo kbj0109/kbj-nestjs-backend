@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum';
+import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum.constant';
 import path from 'path';
 import chalk from 'chalk';
 

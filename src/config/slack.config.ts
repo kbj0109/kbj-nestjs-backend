@@ -1,5 +1,5 @@
 import { WebClient } from '@slack/web-api';
-import { environment } from '../config/environment';
+import { environment } from './environment.config';
 
 const web: WebClient = new WebClient(environment.SLACK_OAUTH_TOKEN);
 

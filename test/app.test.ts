@@ -1,4 +1,4 @@
-import { setEnvironment } from '../src/config/environment';
+import { setEnvironment } from '../src/config/environment.config';
 setEnvironment();
 
 import { Test, TestingModule } from '@nestjs/testing';

@@ -1,12 +1,12 @@
-import { getDatabaseConfig } from './database';
+import { getDatabaseConfig } from './database.config';
 import { DataSource } from 'typeorm';
 import _ from 'lodash';
 import chalk from 'chalk';
-import { environment } from './environment';
+import { environment } from './environment.config';
 import { createRandomNumericString, printDeveloperMessage } from '../utils';
 import { InternalServerErrorException } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { DatabaseEnum } from '../constant/enum';
+import { DatabaseEnum } from '../constant/enum.constant';
 
 // @ DB의 실제 상태와 코드 상태를 비교하여 알람을 띄우는 기능을 위한 코드들
 

@@ -1,9 +1,9 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { InternalServerErrorException } from '@nestjs/common';
-import { environment } from '../config/environment';
-import { BadParameterException, possibleExceptionList } from '../constant/exception';
+import { environment } from '../config/environment.config';
+import { BadParameterException, possibleExceptionList } from '../constant/exception.constant';
 import { Request, Response } from 'express';
-import { ServerEnvEnum } from '../constant/enum';
+import { ServerEnvEnum } from '../constant/enum.constant';
 import { ZodError } from 'zod';
 import _ from 'lodash';
 

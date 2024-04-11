@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { validateParameter } from '../utils/dto';
+import { validateParameter } from '../utils/dto.util';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthRenewInput, AuthRenewOutput, AuthSignInInput, AuthSignInOutput } from './auth.dto';

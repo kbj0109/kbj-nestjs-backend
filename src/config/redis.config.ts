@@ -1,9 +1,9 @@
 import { Provider } from '@nestjs/common';
 import Redis from 'ioredis';
-import { environment } from './environment';
+import { environment } from './environment.config';
 import { getEnvironmentByAddress, printDeveloperMessage } from '../utils';
-import { RedisEnum } from '../constant/enum';
-import { sendSlackMessage } from './slack';
+import { RedisEnum } from '../constant/enum.constant';
+import { sendSlackMessage } from './slack.config';
 
 export const connectRedis = (type: RedisEnum = RedisEnum.Main): Provider => {
   return {

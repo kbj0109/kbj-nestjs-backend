@@ -1,7 +1,7 @@
 /** System 알람 */
 
 import { printDeveloperMessage } from '../utils';
-import { environment, setEnvironment } from './environment';
+import { environment, setEnvironment } from './environment.config';
 
 setEnvironment();
 

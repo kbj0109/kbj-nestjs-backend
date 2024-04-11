@@ -4,7 +4,7 @@ import { catchError, Observable, tap } from 'rxjs';
 import { DataSource } from 'typeorm';
 
 import { InjectDatasource } from '../decorators/dependency.decorator';
-import { DatabaseEnum } from '../constant/enum';
+import { DatabaseEnum } from '../constant/enum.constant';
 
 /** 특정 DB의 Transaction 을 각 클라이언트 요청 전후로 처리하게 Intercept  */
 export function TransactionWrapper(databaseType: DatabaseEnum): ReturnType<typeof applyDecorators> {

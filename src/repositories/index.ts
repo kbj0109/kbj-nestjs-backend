@@ -19,7 +19,7 @@ import {
   OptionalToNullable,
   QueryOrderOption,
 } from '../types';
-import { setNullToIsNull } from '../utils/database';
+import { setNullToIsNull } from '../utils/database.util';
 
 // @ d.ts 파일에 있으면 모종의 이유로 타입 체크와 상속이 제대로 안되는 경우가 있어서 여기로 옮김
 /** Condition 조건 중 undefined | string | number | boolean | Date 타입들에 TypeOrm 기존의 여러 조건을 허용 */
