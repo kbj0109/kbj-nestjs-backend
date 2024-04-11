@@ -19,51 +19,51 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 jobs:
-  test:
-    if: github.event.pull_request.merged == true
+  # test:
+  #   if: github.event.pull_request.merged == true
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.5.0]
+  #   strategy:
+  #     matrix:
+  #       node-version: [20.5.0]
 
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
-      - name: Checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     # 현재 작업 중인 저장소를 가져와서 해당 작업을 수행하기 위한 기반 코드를 로컬 환경(Runner환경)에 다운로드
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      # SecrentManager에서 .env 생성
-      - name: Get SecretManager by name
-        run: |
-          aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND |
-          jq -r '.SecretString' > .env
+  #     # SecrentManager에서 .env 생성
+  #     - name: Get SecretManager by name
+  #       run: |
+  #         aws secretsmanager get-secret-value --secret-id STAGING_KBJ_NESTJS_BACKEND |
+  #         jq -r '.SecretString' > .env
 
-      - name: Get Ready for Test
-        run: npm install
+  #     - name: Get Ready for Test
+  #       run: npm install
 
-      - name: Run Test
-        run: npm run test
+  #     - name: Run Test
+  #       run: npm run test
 
-      - name: Slack Notification on Failure
-        uses: rtCamp/action-slack-notify@v2
-        if: failure()
-        env:
-          SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK_URL }}
-          SLACK_COLOR: ${{ job.status }}
-          MSG_MINIMAL: true
-          SLACK_TITLE: Staging Test Failed - ${{ github.repository }}
-          SLACK_MESSAGE: >
-            > Test Failed
-            - <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Check Here>
+  #     # 실패시 Slack 알람
+  #     - name: Slack Notification on Failure
+  #       uses: rtCamp/action-slack-notify@v2
+  #       if: failure()
+  #       env:
+  #         SLACK_WEBHOOK: ${{ env.SLACK_WEBHOOK_URL }}
+  #         SLACK_COLOR: ${{ job.status }}
+  #         MSG_MINIMAL: true
+  #         SLACK_TITLE: Staging Test Failed - ${{ github.repository }}
+  #         SLACK_MESSAGE: >
+  #           > Test Failed
+  #           - <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Check Here>
 
-
-            > Pull Request #${{ github.event.pull_request.number }} - [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
-            - <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
+  #           > Pull Request #${{ github.event.pull_request.number }} - [${{ github.event.pull_request.head.ref }} => ${{ github.event.pull_request.base.ref }}]
+  #           - <https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}|${{ github.event.pull_request.title }}>
 
   # build:
-  #   # needs: test
+  #   needs: test
   #   runs-on: ubuntu-latest
 
   #   steps:
@@ -137,3 +137,37 @@ jobs:
   #         KUBE_CONFIG_DATA: ${{ env.KUBE_CONFIG_DATA }}
   #       with:
   #         args: rollout status deployment/kbj-deployment
+
+  merge_from_production_to_staging:
+    # needs: deploy
+    if: github.ref == 'refs/heads/production'
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Merge production -> staging
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: production
+          target_branch: staging
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  merge_from_staging_to_develop:
+    # needs: deploy
+    if: github.ref == 'refs/heads/staging'
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Merge staging -> develop
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: staging
+          target_branch: develop
+          github_token: ${{ secrets.GITHUB_TOKEN }}

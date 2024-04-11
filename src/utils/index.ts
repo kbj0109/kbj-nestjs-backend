@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { DateTimezone } from '../constant/date';
 import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum';
 import randomstring from 'randomstring';
+import { environment } from '../config/environment';
 
 /** 문자/숫자가 섞인 랜덤 글자 생성 */
 export const createRandomString = (length: number): string => {
@@ -28,7 +29,9 @@ export const printDeveloperMessage = (message: string, delay = 300): void => {
   newMessage = replaceText(newMessage, DateTimezone.UTC, chalk.yellow(DateTimezone.UTC));
   newMessage = replaceText(newMessage, DateTimezone.KST, chalk.yellow(DateTimezone.KST));
 
-  setTimeout(() => console.log(newMessage), delay);
+  if (environment.NODE_ENV !== NodeEnvEnum.Test) {
+    setTimeout(() => console.log(newMessage), delay);
+  }
 };
 
 /** 주소로 환경을 판별 */

@@ -10,7 +10,7 @@
     "start": "node dist/src/main",
     "build": "nest build",
     "docker-build": "docker build -f ./ci/Dockerfile --tag kbj-nestjs-backend:1.0 .",
-    "test": "jest --verbose=true",
+    "test": "jest --detectOpenHandles --runInBand --verbose --forceExit",
     "test:coverage": "jest --coverage",
     "format": "prettier --write .",
     "db-up": "docker-compose -f ./infra/docker-compose.yaml up -d",
