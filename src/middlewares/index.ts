@@ -6,6 +6,7 @@ import { ServerEnvEnum } from '../constant/enum';
 import { TimeoutInterceptor } from '../interceptors/timeout.interceptor';
 import { LoggingInterceptor } from '../interceptors/logging.interceptor';
 import { setRequestIp } from './header';
+import { setApiDocument } from './swagger';
 
 /** 서버에 필요한 미들웨어 설정 */
 export const setMiddleware = (app: INestApplication): void => {
@@ -13,7 +14,7 @@ export const setMiddleware = (app: INestApplication): void => {
   app.use(setRequestIp);
   app.use(express.json({ limit: '20mb' }));
 
-  app.useGlobalPipes(new ValidationPipe({ exceptionFactory: badParamRequestExceptionHandler }));
+  // app.useGlobalPipes(new ValidationPipe({ exceptionFactory: badParamRequestExceptionHandler }));
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
@@ -22,4 +23,6 @@ export const setMiddleware = (app: INestApplication): void => {
   }
 
   app.useGlobalInterceptors(new LoggingInterceptor());
+
+  setApiDocument(app);
 };
