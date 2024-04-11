@@ -31,6 +31,7 @@
     "@slack/web-api": "^7.0.2",
     "@supercharge/request-ip": "^1.2.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
     "dotenv": "^16.4.5",
     "ioredis": "^5.3.2",
     "lodash": "^4.17.21",

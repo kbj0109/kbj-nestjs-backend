@@ -1,12 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 export enum GenderEnum {
   Male = 'Male',
   Female = 'Female',
 }
 
-export type IUser = UserSchema;
+export interface IUser {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  username: string;
+  password: string;
+  name: string;
+  gender?: GenderEnum;
+  email?: string;
+  phone?: string;
+  birth?: string;
+}
 
 @Entity({ name: 'users' })
 export class UserSchema {
@@ -61,6 +74,7 @@ export class UserDTO implements Required<IUser> {
   username: string;
 
   @ApiProperty({ description: '비밀번호.' })
+  @Exclude()
   password: string;
 
   @ApiProperty({})
@@ -77,4 +91,8 @@ export class UserDTO implements Required<IUser> {
 
   @ApiProperty()
   birth: string;
+
+  constructor(partial: Partial<UserDTO>) {
+    Object.assign(this, partial);
+  }
 }
