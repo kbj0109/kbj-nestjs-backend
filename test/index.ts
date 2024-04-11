@@ -7,6 +7,8 @@ import { RedisHelper } from '../src/config/redis.config';
 import TestAgent from 'supertest/lib/agent';
 import supertest from 'supertest';
 import { IUser } from '../src/repositories/schema/user.schema';
+import { AuthService } from '../src/services/auth.service';
+import { UserService } from '../src/services/user.service';
 
 /* 테스트 준비 - CallByRefrence 법칙으로 request 전달 (Deconstruct request inside test) */
 export const setupTest = (): { request: TestAgent; appModule: TestingModule } => {
@@ -40,9 +42,21 @@ export const setupTest = (): { request: TestAgent; appModule: TestingModule } =>
 };
 
 /* Sample 로그인 */
-export const signInForTest = async (request: TestAgent, data: Pick<IUser, 'username' | 'password'>) => {
-  const response = await request.post('/auths/signin').send(data);
+export const loginForTest = async (
+  request: TestAgent,
+  data: Pick<IUser, 'username' | 'password'>,
+): ReturnType<AuthService['login']> => {
+  const response = await request.post('/auths/login').send(data);
   const { accessToken, refreshToken } = response.body;
 
   return { accessToken, refreshToken };
+};
+
+/* Sample 회원가입 */
+export const createUserForTest = async (
+  request: TestAgent,
+  data: Pick<IUser, 'username' | 'password' | 'name'>,
+): ReturnType<UserService['createOne']> => {
+  const response = await request.post('/users').send(data);
+  return response.body;
 };

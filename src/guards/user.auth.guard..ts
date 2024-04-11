@@ -1,6 +1,6 @@
 import { applyDecorators, ExecutionContext, SetMetadata, UseGuards } from '@nestjs/common';
 import { environment } from '../config/environment.config';
-import { ConfirmExistenceGuard, ExpiredTokenGuard, SignInGuard } from './auth.guard';
+import { ConfirmExistenceGuard, ExpiredTokenGuard, LoginGuard } from './auth.guard';
 import { Request } from 'express';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -23,14 +23,14 @@ export function UserAuthGuard(option?: {
     SetMetadata('expiresIn', expiresIn),
     UseGuards(
       JwtGuard, // 토큰 해석
-      SignInGuard, // 로그인 여부 확인
+      LoginGuard, // 로그인 여부 확인
       ExpiredTokenGuard, // 만료 토큰 허용 유무 확인
       ConfirmExistenceGuard, // Token 내 AuthId의 실제 유무 확인
     ),
   );
 }
 
-export class SignInJwtStrategy extends PassportStrategy(Strategy, 'SignInUserAuth') {
+export class LoginJwtStrategy extends PassportStrategy(Strategy, 'LoginUserAuth') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -39,7 +39,7 @@ export class SignInJwtStrategy extends PassportStrategy(Strategy, 'SignInUserAut
     });
   }
 
-  validate(payload: JwtType): JwtType {
+  validate(payload: LoginUserType): LoginUserType {
     const { userId } = payload;
 
     if (!userId) {
@@ -50,9 +50,9 @@ export class SignInJwtStrategy extends PassportStrategy(Strategy, 'SignInUserAut
   }
 }
 
-class JwtGuard extends AuthGuard('SignInUserAuth') {
+class JwtGuard extends AuthGuard('LoginUserAuth') {
   constructor() {
-    super();
+    super({ property: 'loginUser' });
   }
 
   getRequest(context: ExecutionContext): Request {
@@ -60,7 +60,7 @@ class JwtGuard extends AuthGuard('SignInUserAuth') {
     return request;
   }
 
-  handleRequest(err: any, payload: ReturnType<SignInJwtStrategy['validate']> | void): any {
+  handleRequest(err: any, payload: ReturnType<LoginJwtStrategy['validate']> | void): any {
     if (err) throw err;
     if (!payload) return; // 토큰이 없는 경우 통과
 

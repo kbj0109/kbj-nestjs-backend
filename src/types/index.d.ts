@@ -6,7 +6,7 @@ export {};
 
 declare global {
   /** JWT Token 기본 내용 */
-  type JwtType = {
+  type LoginUserType = {
     userId: IUser['id'];
     username: IUser['username'];
     authId: IAuth['id'];
@@ -16,7 +16,7 @@ declare global {
 
   namespace Express {
     type Request = {
-      user?: JwtType;
+      loginUser?: LoginUserType;
     };
   }
 }

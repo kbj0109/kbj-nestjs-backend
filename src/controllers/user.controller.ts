@@ -8,7 +8,7 @@ import { DATE_REGEX } from '../constant/date.constant';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
-import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
+import { LoginUser, Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto.constant';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
@@ -76,10 +76,10 @@ export class UserController {
   async UpdateOne(
     @Param() param: IdInput,
     @Body() body: UserUpdateInput,
-    @CurrentUser() user: Request['user'],
+    @LoginUser() loginUser: LoginUserType,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<Omit<IUser, 'password'>> {
-    validateParameter(param, { id: z.literal(user!.userId) });
+    validateParameter(param, { id: z.literal(loginUser!.userId) });
 
     validateParameter(body, {
       password: z.string().optional(),

@@ -1,7 +1,7 @@
 import { setEnvironment } from '../src/config/environment.config';
 setEnvironment({ NODE_ENV: NodeEnvEnum.Test });
 
-import { setupTest, signInForTest } from '.';
+import { setupTest, loginForTest } from '.';
 import { NodeEnvEnum } from '../src/constant/enum.constant';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
@@ -37,7 +37,7 @@ describe('API /users 테스트', () => {
     const response2 = await testing.request.post('/users').send(data);
     expect(response2.status).toBe(409);
 
-    const { accessToken } = await signInForTest(testing.request, data);
+    const { accessToken } = await loginForTest(testing.request, data);
     authorization = `Bearer ${accessToken}`;
   });
 

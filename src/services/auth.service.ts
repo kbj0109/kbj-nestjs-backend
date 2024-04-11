@@ -21,7 +21,7 @@ export class AuthService extends BaseService {
 
   confirmOne = this.authRepository.confirmOne;
 
-  signIn = async (
+  login = async (
     username: IUser['username'],
     password: IUser['password'],
   ): Promise<{ accessToken: string; refreshToken: string }> => {

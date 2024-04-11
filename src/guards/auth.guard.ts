@@ -8,7 +8,7 @@ import ms from 'ms';
 
 /** 로그인 상태 확인 */
 @Injectable()
-export class SignInGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): true {
@@ -16,8 +16,8 @@ export class SignInGuard implements CanActivate {
 
     const allowEmptyToken = this.reflector.get<boolean>('allowEmptyToken', context.getHandler());
 
-    if (allowEmptyToken && !request.user) return true;
-    if (request.user) return true;
+    if (allowEmptyToken && !request.loginUser) return true;
+    if (request.loginUser) return true;
 
     throw new UnauthorizedException({ message: 'Login Required' });
   }
@@ -36,13 +36,13 @@ export class ExpiredTokenGuard implements CanActivate {
     const expiresIn = this.reflector.get<string>('expiresIn', context.getHandler());
 
     // 빈 토큰 허용이면서 비로그인 상태에서는 통과
-    if (allowEmptyToken && !request.user) return true;
+    if (allowEmptyToken && !request.loginUser) return true;
 
-    if (!request.user) {
+    if (!request.loginUser) {
       return true;
     }
 
-    const { iat } = request.user as JwtType;
+    const { iat } = request.loginUser as LoginUserType;
     const isTokenExpired = iat * 1000 + ms(expiresIn) < new Date().getTime();
 
     if (isTokenExpired === false || allowExpiredToken) return true;
@@ -65,9 +65,9 @@ export class ConfirmExistenceGuard implements CanActivate {
     const allowEmptyToken = this.reflector.get<boolean>('allowEmptyToken', context.getHandler());
 
     // 빈 토큰 허용이면서 비로그인 상태에서는 통과
-    if (allowEmptyToken && !request.user) return true;
+    if (allowEmptyToken && !request.loginUser) return true;
 
-    const { userId } = request.user as JwtType;
+    const { userId } = request.loginUser as LoginUserType;
 
     const user = await this.userService.readOne({ id: userId }, { select: ['id', 'username'] });
     if (!user) {

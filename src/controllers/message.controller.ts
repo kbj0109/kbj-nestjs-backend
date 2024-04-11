@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { MessageService } from '../services/message.service';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
-import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
+import { LoginUser, Transaction } from '../decorators/parameter.decorator';
 import { validateParameter, validateStringIsNumeric } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
@@ -32,7 +32,7 @@ export class MessageController {
   @Post('send')
   async sendMessageToUser(
     @Body() body: MessageSendInput,
-    @CurrentUser() user: JwtType,
+    @LoginUser() loginUser: LoginUserType,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<MessageOutput> {
     validateParameter(body, {
@@ -43,7 +43,10 @@ export class MessageController {
 
     await this.userService.confirmOne({ id: body.toUserId });
 
-    const item = await this.messageService.sendMessageAfterCheck({ ...body, fromUserId: user.userId }, { transaction });
+    const item = await this.messageService.sendMessageAfterCheck(
+      { ...body, fromUserId: loginUser.userId },
+      { transaction },
+    );
 
     return new MessageDTO(item);
   }
@@ -56,7 +59,7 @@ export class MessageController {
   async updateStatus(
     @Param() param: IdInput,
     @Body() body: MessageUpdateInput,
-    @CurrentUser() user: JwtType,
+    @LoginUser() loginUser: LoginUserType,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<void> {
     validateParameter(param, { id: validateStringIsNumeric() });
@@ -68,7 +71,7 @@ export class MessageController {
     const { id, fromUserId, toUserId } = await this.messageService.confirmOne({
       id: param.id,
       messageStatus: MessageStatusEnum.activated,
-      toUserId: user.userId,
+      toUserId: loginUser.userId,
     });
 
     await this.messageService.updateStatus({ id, fromUserId, toUserId }, body, { transaction });
