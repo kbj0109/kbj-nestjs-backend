@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { MatchingSchema } from './matching.schema';
+import { MessageSchema } from './message.schema';
 
 export enum GenderEnum {
   Male = 'Male',
@@ -65,11 +66,14 @@ export class UserSchema implements IUser {
   @Column('date', { nullable: true })
   birth?: string;
 
+  @OneToMany(() => MessageSchema, (message) => message.sentUser)
+  sentMessages: MessageSchema[];
+
+  @OneToMany(() => MessageSchema, (message) => message.receivedUser)
+  receivedMessages: MessageSchema[];
+
   @OneToMany(() => MatchingSchema, (matching) => matching.user)
   matchings: MatchingSchema[];
-
-  @OneToMany(() => MatchingSchema, (matching) => matching.matchingUser)
-  matchingsFromOther: MatchingSchema[];
 }
 
 export class UserDTO implements Required<IUser> {

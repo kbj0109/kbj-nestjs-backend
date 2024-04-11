@@ -19,7 +19,7 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
   readManyAndTotalCountWithUserAndMessage = async (
     userId: IUser['id'],
     option?: QueryListOption,
-  ): Promise<{ list: (IMatching & { matchingUser: IUser })[]; totalCount: number }> => {
+  ): Promise<{ list: (IMatching & Pick<MatchingSchema, 'matchingUser' | 'message'>)[]; totalCount: number }> => {
     const { skip, take } = option || {};
 
     const [list, totalCount] = await this.repository.findAndCount({
@@ -31,7 +31,7 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
 
     return {
       totalCount,
-      list: list as (IMatching & { matchingUser: IUser })[],
+      list: list as (IMatching & Pick<MatchingSchema, 'matchingUser' | 'message'>)[],
     };
   };
 }

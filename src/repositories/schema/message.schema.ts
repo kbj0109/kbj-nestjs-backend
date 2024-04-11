@@ -4,11 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IUser } from './user.schema';
+import { IUser, UserSchema } from './user.schema';
 import { MatchingSchema } from './matching.schema';
 
 export enum MessageLevelEnum {
@@ -70,6 +72,14 @@ export class MessageSchema implements IMessage {
 
   @OneToOne(() => MatchingSchema, (matching) => matching.message)
   matching?: MatchingSchema;
+
+  @ManyToOne(() => UserSchema, (user) => user.sentMessages, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'fromUserId' })
+  sentUser: IUser;
+
+  @ManyToOne(() => UserSchema, (user) => user.receivedMessages, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'toUserId' })
+  receivedUser: IUser;
 }
 
 export class MessageDTO implements Required<IMessage> {

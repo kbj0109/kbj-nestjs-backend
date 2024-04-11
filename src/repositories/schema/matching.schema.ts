@@ -35,7 +35,7 @@ export class MatchingSchema implements IMatching {
   @ManyToOne(() => UserSchema, (user) => user.matchings, { createForeignKeyConstraints: false })
   user?: UserSchema;
 
-  @ManyToOne(() => UserSchema, (user) => user.matchingsFromOther, { createForeignKeyConstraints: false })
+  @ManyToOne(() => UserSchema, (user) => user.matchings, { createForeignKeyConstraints: false })
   matchingUser?: UserSchema;
 }
 
