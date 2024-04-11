@@ -12,7 +12,6 @@ import { LoginUser, Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto.constant';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
-import { Request } from 'express';
 
 @ApiTags('users')
 @Controller('users')
