@@ -5,13 +5,15 @@ import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter } from '../utils/dto';
 import { z } from 'zod';
 import { DATE_REGEX } from '../constant/date';
-import { ApiResponse, ApiTags, OmitType } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags, OmitType } from '@nestjs/swagger';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum';
-import { Transaction } from '../decorators/parameter.decorator';
+import { CurrentUser, Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto';
 import { NumericString_Regex } from '../constant/regex';
+import { MainAuthGuard } from '../guards/sign-in.guard.';
+import { Request } from 'express';
 
 @ApiTags('users')
 @Controller('users')
@@ -67,14 +69,17 @@ export class UserController {
   }
 
   @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
+  @ApiBearerAuth()
+  @MainAuthGuard()
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Put(':id')
   async UpdateOne(
     @Param() param: IdInput,
     @Body() body: UserUpdateInput,
+    @CurrentUser() user: Request['user'],
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<Omit<IUser, 'password'>> {
-    validateParameter(param, { id: z.string() });
+    validateParameter(param, { id: z.literal(user!.userId) });
 
     validateParameter(body, {
       password: z.string().optional(),

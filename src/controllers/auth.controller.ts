@@ -1,9 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { validateParameter } from '../utils/dto';
 import { z } from 'zod';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthSignInInput, AuthSignInOutput } from './auth.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthRenewInput, AuthRenewOutput, AuthSignInInput, AuthSignInOutput } from './auth.dto';
 import { AuthService } from '../services/auth.service';
+import { MainAuthGuard } from '../guards/sign-in.guard.';
+import { CurrentUser } from '../decorators/parameter.decorator';
 
 @ApiTags('auths')
 @Controller('auths')
@@ -17,8 +19,23 @@ export class AuthController {
 
     const { username, password } = body;
 
-    const item = await this.authService.signIn(username, password);
+    const result = await this.authService.signIn(username, password);
 
-    return item;
+    return result;
+  }
+
+  @ApiResponse({ status: 201, type: AuthRenewOutput })
+  @ApiBearerAuth()
+  @MainAuthGuard({ allowExpiredToken: true })
+  @Post('renew')
+  async RenewAccessToken(
+    @Body() body: AuthRenewInput,
+    @CurrentUser() user: JwtType,
+  ): ReturnType<AuthService['signIn']> {
+    validateParameter(body, { refreshToken: z.string() });
+
+    const result = await this.authService.renewAccessToken({ id: user.authId, userId: user.userId }, body.refreshToken);
+
+    return result;
   }
 }
