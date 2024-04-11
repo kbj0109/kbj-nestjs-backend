@@ -20,6 +20,12 @@ export class UserSchema {
   deletedAt?: Date;
 
   @Column('varchar')
+  username: string;
+
+  @Column('varchar')
+  password: string;
+
+  @Column('varchar')
   name: string;
 
   @Column('varchar', { nullable: true })
