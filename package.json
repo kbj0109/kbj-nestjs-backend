@@ -6,16 +6,13 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
-    "docker-build": "docker build -f ./ci/Dockerfile --tag kbj-nestjs-backend:1.0 .",
-    "format": "prettier --write .",
     "start": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
+    "build": "nest build",
+    "docker-build": "docker build -f ./ci/Dockerfile --tag kbj-nestjs-backend:1.0 .",
     "test": "jest --verbose=true",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:coverage": "jest --coverage",
+    "format": "prettier --write .",
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.529.1",

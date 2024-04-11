@@ -21,4 +21,4 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./docker-volume/redis/data:/data
+      - ./volume/redis/data:/data
