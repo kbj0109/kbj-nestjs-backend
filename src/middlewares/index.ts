@@ -9,12 +9,16 @@ import { setRequestIp } from './header.middleware';
 import { setApiDocument } from './swagger.middleware';
 import _ from 'lodash';
 import { Reflector } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 /** 서버에 필요한 미들웨어 설정 */
 export const setMiddleware = (app: INestApplication): void => {
   app.enableCors();
   app.use(setRequestIp);
   app.use(express.json({ limit: '20mb' }));
+  app.use(cookieParser());
+  app.use(helmet());
 
   app.useGlobalFilters(new AllExceptionFilter());
 
