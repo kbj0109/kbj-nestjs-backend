@@ -1,17 +1,17 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessageService } from '../services/message.service';
 import { TransactionWrapper } from '../interceptors/transaction.interceptor';
 import { DatabaseEnum } from '../constant/enum.constant';
 import { LoginUser, Transaction } from '../decorators/parameter.decorator';
-import { validateParameter, validateStringIsNumeric } from '../utils/dto.util';
+import { validateParameter, validateStringIsNumeric, validateValueToInt } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
-import { MessageOutput, MessageSendInput, MessageUpdateInput } from './message.controller.dto';
+import { MessageOutput, MessageSendInput, MessageUpdateInput, MessagesOutput } from './message.controller.dto';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { UserService } from '../services/user.service';
 import { QueryRunner } from 'typeorm';
-import { IdInput } from '../constant/dto.constant';
+import { IdInput, ListInput } from '../constant/dto.constant';
 
 @ApiBearerAuth()
 @ApiTags('messages')
@@ -65,7 +65,7 @@ export class MessageController {
     validateParameter(param, { id: validateStringIsNumeric() });
     validateParameter(body, {
       messageStatus: z.enum([MessageStatusEnum.accepted, MessageStatusEnum.rejected]),
-      reason: z.string(),
+      reason: z.string().optional(),
     });
 
     const { id, fromUserId, toUserId } = await this.messageService.confirmOne({
@@ -77,5 +77,47 @@ export class MessageController {
     await this.messageService.updateStatus({ id, fromUserId, toUserId }, body, { transaction });
 
     return;
+  }
+
+  @ApiOperation({ summary: '내가 보낸 메세지 목록' })
+  @ApiResponse({ status: 200, type: MessagesOutput })
+  @UserAuthGuard()
+  @Get('sent')
+  async readManySentMessages(
+    @Query() query: ListInput,
+    @LoginUser() loginUser: LoginUserType,
+  ): Promise<MessagesOutput> {
+    const { skip, take } = validateParameter(query, {
+      skip: validateValueToInt({ defaultValue: 0, optional: true }),
+      take: validateValueToInt({ defaultValue: 10, max: 100 }),
+    });
+
+    const { totalCount, list } = await this.messageService.readManyAndTotalCount(
+      { fromUserId: loginUser.userId },
+      { skip, take },
+    );
+
+    return { totalCount, list: list.map((item) => new MessageDTO(item)) };
+  }
+
+  @ApiOperation({ summary: '내가 받은 메세지 목록' })
+  @ApiResponse({ status: 200, type: MessagesOutput })
+  @UserAuthGuard()
+  @Get('received')
+  async readManyReceivedMessages(
+    @Query() query: ListInput,
+    @LoginUser() loginUser: LoginUserType,
+  ): Promise<MessagesOutput> {
+    const { skip, take } = validateParameter(query, {
+      skip: validateValueToInt({ defaultValue: 0, optional: true }),
+      take: validateValueToInt({ defaultValue: 10, max: 100 }),
+    });
+
+    const { totalCount, list } = await this.messageService.readManyAndTotalCount(
+      { toUserId: loginUser.userId },
+      { skip, take },
+    );
+
+    return { totalCount, list: list.map((item) => new MessageDTO(item)) };
   }
 }

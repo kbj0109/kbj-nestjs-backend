@@ -9,7 +9,7 @@ export class UserCreateInput extends IntersectionType(
 
 export class UserOutput extends IntersectionType(
   OmitType(UserDTO, ['password']),
-  PartialType(PickType(UserDTO, ['birth', 'email', 'gender', 'phone'])),
+  PartialType(PickType(UserDTO, ['birth', 'email', 'gender', 'phone', 'deletedAt'])),
 ) {}
 
 export class UsersOutput {

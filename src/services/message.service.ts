@@ -15,6 +15,7 @@ export class MessageService extends BaseService {
   }
 
   createOne = this.messageRepository.createOne;
+  readManyAndTotalCount = this.messageRepository.readManyAndTotalCount;
   confirmOne = this.messageRepository.confirmOne;
   update = this.messageRepository.update;
 
