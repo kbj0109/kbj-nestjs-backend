@@ -12,7 +12,9 @@ export const setMiddleware = (app: INestApplication): void => {
   app.enableCors();
   app.use(setRequestIp);
   app.use(express.json({ limit: '20mb' }));
+
   app.useGlobalPipes(new ValidationPipe({ exceptionFactory: badParamRequestExceptionHandler }));
+
   app.useGlobalFilters(new HttpExceptionFilter());
 
   if (environment.IS_LOCAL === false && environment.SERVER_ENV !== ServerEnvEnum.Local) {
