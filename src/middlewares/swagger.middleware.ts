@@ -3,6 +3,7 @@ import { environment } from '../config/environment.config';
 import { printDeveloperMessage } from '../utils';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NodeEnvEnum } from '../constant/enum.constant';
+import chalk from 'chalk';
 
 export const setApiDocument = (app: INestApplication): void => {
   if (environment.IS_LOCAL || environment.NODE_ENV !== NodeEnvEnum.Production) {
@@ -12,6 +13,7 @@ export const setApiDocument = (app: INestApplication): void => {
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(`/swagger`, app, document);
 
-    printDeveloperMessage(`*** Swagger API Document: http://localhost:${environment.SERVER_PORT}/swagger`);
+    const swaggerAddress = `http://127.0.0.1:${environment.SERVER_PORT}/swagger`;
+    printDeveloperMessage(`*** Swagger API Document: ${chalk.yellow(swaggerAddress)}`);
   }
 };
