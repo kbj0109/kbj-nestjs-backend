@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { MatchingSchema } from './matching.schema';
 
 export enum GenderEnum {
   Male = 'Male',
@@ -55,6 +64,12 @@ export class UserSchema implements IUser {
 
   @Column('date', { nullable: true })
   birth?: string;
+
+  @OneToMany(() => MatchingSchema, (matching) => matching.user)
+  matchings: MatchingSchema[];
+
+  @OneToMany(() => MatchingSchema, (matching) => matching.matchingUser)
+  matchingsFromOther: MatchingSchema[];
 }
 
 export class UserDTO implements Required<IUser> {

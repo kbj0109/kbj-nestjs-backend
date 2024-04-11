@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IUser } from './user.schema';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { IUser, UserSchema } from './user.schema';
 import { IMessage } from './message.schema';
 
 export interface IMatching {
   id: string;
   createdAt: Date;
-  fromUserId: IUser['id'];
-  toUserId: IUser['id'];
+  userId: IUser['id'];
+  matchingUserId: IUser['id'];
   messageId: IMessage['id'];
 }
 
@@ -20,13 +20,19 @@ export class MatchingSchema implements IMatching {
   createdAt: Date;
 
   @Column('bigint')
-  fromUserId: IUser['id'];
+  userId: IUser['id'];
 
   @Column('bigint')
-  toUserId: IUser['id'];
+  matchingUserId: IUser['id'];
 
   @Column('bigint')
   messageId: IMessage['id'];
+
+  @ManyToOne(() => UserSchema, (user) => user.matchings, { createForeignKeyConstraints: false })
+  user?: UserSchema;
+
+  @ManyToOne(() => UserSchema, (user) => user.matchingsFromOther, { createForeignKeyConstraints: false })
+  matchingUser?: UserSchema;
 }
 
 export class MatchingDTO implements Required<IMatching> {
@@ -37,10 +43,10 @@ export class MatchingDTO implements Required<IMatching> {
   createdAt: Date;
 
   @ApiProperty()
-  fromUserId: IUser['id'];
+  userId: IUser['id'];
 
   @ApiProperty()
-  toUserId: IUser['id'];
+  matchingUserId: IUser['id'];
 
   @ApiProperty()
   messageId: IMessage['id'];
