@@ -6,10 +6,11 @@ import { AppModule } from '../src/app.module';
 import { RedisHelper } from '../src/config/redis.config';
 import TestAgent from 'supertest/lib/agent';
 import supertest from 'supertest';
+import { IUser } from '../src/repositories/schema/user.schema';
 
 /* 테스트 준비 - CallByRefrence 법칙으로 request 전달 (Deconstruct request inside test) */
-export const setupTest = (): { request: TestAgent } => {
-  const obj: { request: TestAgent } = { request: null as any };
+export const setupTest = (): { request: TestAgent; appModule: TestingModule } => {
+  const obj: { request: TestAgent; appModule: TestingModule } = { appModule: null, request: null } as any;
 
   let app: INestApplication;
   let dataSource: DataSource;
@@ -21,6 +22,7 @@ export const setupTest = (): { request: TestAgent } => {
     app = appModule.createNestApplication();
     dataSource = appModule.get(DatabaseEnum.KBJ);
     redisHelper = appModule.get(RedisEnum.Main);
+    obj.appModule = appModule;
     obj.request = supertest(app.getHttpServer());
 
     await app.init();
@@ -35,4 +37,12 @@ export const setupTest = (): { request: TestAgent } => {
   });
 
   return obj;
+};
+
+/* Sample 로그인 */
+export const signInForTest = async (request: TestAgent, data: Pick<IUser, 'username' | 'password'>) => {
+  const response = await request.post('/auths/signin').send(data);
+  const { accessToken, refreshToken } = response.body;
+
+  return { accessToken, refreshToken };
 };

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { UserCreateInput, UserOutput, UserUpdateInput, UsersOutput } from './user.controller.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
-import { validateParameter, validateValueToInt } from '../utils/dto.util';
+import { validateParameter, validateStringIsNumeric, validateValueToInt } from '../utils/dto.util';
 import { z } from 'zod';
 import { DATE_REGEX } from '../constant/date.constant';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -37,6 +37,7 @@ export class UserController {
     });
 
     const item = await this.userService.createOne(body, { transaction });
+    delete (item as any).password;
 
     return new UserDTO(item);
   }
@@ -55,9 +56,11 @@ export class UserController {
   }
 
   @ApiResponse({ status: 200, type: UserOutput })
+  @ApiBearerAuth()
+  @UserAuthGuard()
   @Get(':id')
   async ReadOne(@Param() param: IdInput): Promise<Omit<IUser, 'password'>> {
-    validateParameter(param, { id: z.string() });
+    validateParameter(param, { id: validateStringIsNumeric() });
 
     const item = await this.userService.confirmOne(param);
     delete (item as any).password;
@@ -90,6 +93,7 @@ export class UserController {
     const item = await this.userService.confirmOne({ id: param.id });
 
     const newItem = await this.userService.updateUser(item.id, body, { transaction });
+    delete (newItem as any).password;
 
     return new UserDTO(newItem);
   }
