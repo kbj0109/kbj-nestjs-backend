@@ -1,6 +1,25 @@
 import { FindOptionsOrder } from 'typeorm';
+import { IUser } from '../repositories/schema/user.schema';
+import { IAuth } from '../repositories/schema/auth.schema';
 
 export {};
+
+declare global {
+  /** JWT Token 기본 내용 */
+  type JwtType = {
+    userId: IUser['id'];
+    username: IUser['username'];
+    authId: IAuth['id'];
+    iat: number; // 토큰 생성 시간
+    exp: number; // 토큰 만료 시간
+  };
+
+  namespace Express {
+    type Request = {
+      user?: JwtType;
+    };
+  }
+}
 
 /**
  * 모든 값이 제거 가능한 Omit 보다는 한정된, 존재하기로 명시된 값만 제거

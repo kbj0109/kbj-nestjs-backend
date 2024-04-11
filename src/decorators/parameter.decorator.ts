@@ -9,3 +9,9 @@ export const Transaction = (databaseType: DatabaseEnum): ParameterDecorator =>
     const transactionKey = `${databaseType}_transaction`;
     return (request as any)[transactionKey];
   })();
+
+/** CurrentUser 가져오기 */
+export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
+  const request = context.switchToHttp().getRequest() as Request;
+  return request.user || {};
+});
