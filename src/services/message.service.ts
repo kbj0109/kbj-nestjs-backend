@@ -3,10 +3,14 @@ import { BaseService } from '.';
 import { MessageRepository } from '../repositories/Message.repository';
 import { IMessage, MessageStatusEnum } from '../repositories/schema/message.schema';
 import { QueryTransactionOption } from '../types';
+import { MatchingRepository } from '../repositories/matching.repository';
 
 @Injectable()
 export class MessageService extends BaseService {
-  constructor(private readonly messageRepository: MessageRepository) {
+  constructor(
+    private readonly messageRepository: MessageRepository,
+    private readonly matchingRepository: MatchingRepository,
+  ) {
     super();
   }
 
@@ -14,19 +18,26 @@ export class MessageService extends BaseService {
   confirmOne = this.messageRepository.confirmOne;
   update = this.messageRepository.update;
 
-  checkMessageIsPossibleToSend = async (
+  checkIfPossibleToSendMessage = async (
     condition: Pick<IMessage, 'messageLevel' | 'toUserId' | 'fromUserId'>,
   ): Promise<boolean> => {
     const { toUserId, fromUserId, messageLevel } = condition;
 
-    // @ 이미 연결된 사람은 불가능 하게 추후 설정
+    // 이미 매칭된 경우에는 메세지를 보낼 수 없음
+    const [matching1, matching2] = await Promise.all([
+      this.matchingRepository.readOne({ toUserId, fromUserId }),
+      this.matchingRepository.readOne({ fromUserId: toUserId, toUserId: fromUserId }),
+    ]);
+    if (matching1 || matching2) {
+      return false;
+    }
 
+    // 새로운 메세지를 보내려면 더 높은 레벨의 메세지만 가능
     const item = await this.messageRepository.readOne(
       { toUserId, fromUserId, messageStatus: MessageStatusEnum.accepted },
       { order: { id: 'DESC' } },
     );
 
-    // 새로운 메세지를 보내려면 더 높은 레벨의 메세지만 가능
     if (!item || item.messageLevel < messageLevel) {
       return true;
     }
@@ -40,7 +51,7 @@ export class MessageService extends BaseService {
   ): Promise<IMessage> => {
     const { toUserId, fromUserId, text, messageLevel } = condition;
 
-    const isPossible = await this.checkMessageIsPossibleToSend({ toUserId, fromUserId, messageLevel });
+    const isPossible = await this.checkIfPossibleToSendMessage({ toUserId, fromUserId, messageLevel });
 
     if (!isPossible) {
       throw new BadRequestException();
@@ -71,7 +82,7 @@ export class MessageService extends BaseService {
     await this.messageRepository.update({ id }, { messageStatus, reason }, option);
 
     if (messageStatus === MessageStatusEnum.accepted) {
-      // @ 연결 매칭 생성하기
+      await this.matchingRepository.createOne({ messageId: id, fromUserId, toUserId });
     }
   };
 }
