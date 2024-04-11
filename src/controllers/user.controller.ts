@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { CreateUserInput, UsersOutput } from './user.dto';
+import { UserConditionInput, UserCreateInput, UserUpdateInput, UsersOutput } from './user.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter } from '../utils/dto';
 import { z } from 'zod';
@@ -12,6 +12,7 @@ import { Transaction } from '../decorators/parameter.decorator';
 import { QueryRunner } from 'typeorm';
 import { IdInput, ListInput } from '../constant/dto';
 import { NumericString_Regex } from '../constant/regex';
+import { NotEmpty } from '../types';
 
 @ApiTags('users')
 @Controller('users')
@@ -22,7 +23,7 @@ export class UserController {
   @TransactionWrapper(DatabaseEnum.KBJ)
   @Post()
   async CreateOne(
-    @Body() body: CreateUserInput,
+    @Body() body: UserCreateInput,
     @Transaction(DatabaseEnum.KBJ) transaction: QueryRunner,
   ): Promise<Omit<IUser, 'password'>> {
     validateParameter(body, {
@@ -56,7 +57,7 @@ export class UserController {
     return { totalCount, list: list.map((item) => new UserDTO(item)) };
   }
 
-  @ApiResponse({ status: 201, type: OmitType(UserDTO, ['password']) })
+  @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
   @Get(':id')
   async ReadOne(@Param() param: IdInput): Promise<Omit<IUser, 'password'>> {
     validateParameter(param, { id: z.string() });
@@ -64,5 +65,26 @@ export class UserController {
     const item = await this.userService.confirmOne(param);
 
     return new UserDTO(item);
+  }
+
+  @ApiResponse({ status: 200, type: OmitType(UserDTO, ['password']) })
+  @Put(':id')
+  async UpdateOne(@Param() param: IdInput, @Body() body: UserUpdateInput): Promise<Omit<IUser, 'password'>> {
+    validateParameter(param, { id: z.string() });
+
+    validateParameter(body, {
+      password: z.string().optional(),
+      name: z.string().optional(),
+      birth: z.string().regex(DATE_REGEX).optional(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
+      gender: z.enum([GenderEnum.Male, GenderEnum.Female]).optional(),
+    });
+
+    const item = await this.userService.confirmOne({ id: param.id });
+
+    const newItem = await this.userService.updateUser(item.id, body);
+
+    return new UserDTO(newItem);
   }
 }

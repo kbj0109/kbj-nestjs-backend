@@ -17,6 +17,20 @@ export class UserService extends BaseService {
   readManyAndTotalCount = this.userRepository.readManyAndTotalCount;
   confirmOne = this.userRepository.confirmOne;
 
+  updateUser = async (
+    id: IUser['id'],
+    data: Partial<OnlyData<IUser>>,
+    option?: QueryTransactionOption,
+  ): Promise<IUser> => {
+    if (data.password) {
+      data.password = await getEncryptValue(data.password);
+    }
+
+    await this.userRepository.update({ id }, data, option);
+
+    return this.userRepository.confirmOne({ id }, option);
+  };
+
   createOne = async (data: OnlyData<IUser>, option?: QueryTransactionOption): Promise<IUser> => {
     const orgItem = await this.userRepository.readOne({ username: data.username });
     if (orgItem) {

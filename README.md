@@ -6,6 +6,9 @@
 6. BadRequestParam 설정 확인 - Done
 7. 예외처리 확인 - Done
 
-8. 권한 가드
-9. 테이블 Join 경우의 수
 
+8. 기본적인 CRUD + List
+9. 로그인 기능
+10. 권한 가드 확인
+11. 테이블 Join 경우의 수
+12. CI/CD 자동 백머지
