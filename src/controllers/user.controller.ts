@@ -60,6 +60,7 @@ export class UserController {
     validateParameter(param, { id: z.string() });
 
     const item = await this.userService.confirmOne(param);
+    delete (item as any).password;
 
     return new UserDTO(item);
   }

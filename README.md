@@ -4,9 +4,10 @@
 4. 스웨거 - Done 
 5. 유효성 검사 - Done
 6. BadRequestParam 설정 확인 - Done
-7. 예외처리 확인 - Done
 8. 기본적인 CRUD + List - Done
 9. 로그인 기능 - Done
 10. 권한 가드 확인 - Done
 11. CI/CD 자동 백머지 - Done
 12. 테이블 Join 경우의 수 - Done
+13. AWS & EKS 인프라 세팅 - Done
+14. Testing - Done 
