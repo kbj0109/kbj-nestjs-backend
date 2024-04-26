@@ -53,28 +53,28 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
 
   environment.DB_SYNC_CHECK = process.env.DB_SYNC_CHECK === 'true';
   environment.DB_FULL_QUERY_LOG = process.env.DB_FULL_QUERY_LOG === 'true';
-  environment.DB_WRITER_HOST = process.env.DB_WRITER_HOST as string;
+  environment.DB_WRITER_HOST = process.env.DB_WRITER_HOST || '';
   environment.DB_WRITER_PORT = Number(process.env.DB_WRITER_PORT);
-  environment.DB_WRITER_USERNAME = process.env.DB_WRITER_USERNAME as string;
-  environment.DB_WRITER_PASSWORD = process.env.DB_WRITER_PASSWORD as string;
-  environment.DB_READER_HOST = process.env.DB_READER_HOST as string;
+  environment.DB_WRITER_USERNAME = process.env.DB_WRITER_USERNAME || '';
+  environment.DB_WRITER_PASSWORD = process.env.DB_WRITER_PASSWORD || '';
+  environment.DB_READER_HOST = process.env.DB_READER_HOST || '';
   environment.DB_READER_PORT = Number(process.env.DB_READER_PORT);
-  environment.DB_READER_USERNAME = process.env.DB_READER_USERNAME as string;
-  environment.DB_READER_PASSWORD = process.env.DB_READER_PASSWORD as string;
-  environment.DB_DATABASE = process.env.DB_DATABASE as string;
+  environment.DB_READER_USERNAME = process.env.DB_READER_USERNAME || '';
+  environment.DB_READER_PASSWORD = process.env.DB_READER_PASSWORD || '';
+  environment.DB_DATABASE = process.env.DB_DATABASE || '';
 
-  environment.REDIS_HOST = process.env.REDIS_HOST as string;
+  environment.REDIS_HOST = process.env.REDIS_HOST || '';
   environment.REDIS_PORT = Number(process.env.REDIS_PORT) || 0;
 
-  environment.SLACK_OAUTH_TOKEN = process.env.SLACK_OAUTH_TOKEN as string;
-  environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL as string;
+  environment.SLACK_OAUTH_TOKEN = process.env.SLACK_OAUTH_TOKEN || '';
+  environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL || '';
 
-  environment.JWT_SECRET_KEY = process.env.JWT_SECRET_KEY as string;
-  environment.ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN as string;
-  environment.REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN as string;
+  environment.JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || '';
+  environment.ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN || '';
+  environment.REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '';
 
-  environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY as string;
-  environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY as string;
+  environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY || '';
+  environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY || '';
 
   // @ 일부로 전달된 값은 env 값은 고정
   Object.entries(definedEnv || {}).forEach(([key, value]) => {
