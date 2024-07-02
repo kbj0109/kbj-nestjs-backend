@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 
 export enum AuthTypeEnum {
   REFRESH_TOKEN = 'refresh', // Access 토큰 갱신용 리프레시 토큰
@@ -58,3 +59,5 @@ export class AuthDTO implements Required<IAuth> {
     Object.assign(this, partial);
   }
 }
+
+checkTypeGuard<ValidateSchemaAndDTO<IAuth, AuthSchema, AuthDTO>>();

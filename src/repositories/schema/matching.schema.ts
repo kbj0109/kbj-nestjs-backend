@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IUser, UserSchema } from './user.schema';
 import { IMessage, MessageSchema } from './message.schema';
+import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 
 export interface IMatching {
   id: string;
@@ -59,3 +60,5 @@ export class MatchingDTO implements Required<IMatching> {
     Object.assign(this, partial);
   }
 }
+
+checkTypeGuard<ValidateSchemaAndDTO<IMatching, MatchingSchema, MatchingDTO>>();

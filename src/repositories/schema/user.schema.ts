@@ -11,6 +11,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { MatchingSchema } from './matching.schema';
 import { MessageSchema } from './message.schema';
+import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 
 export enum GenderEnum {
   Male = 'Male',
@@ -67,13 +68,13 @@ export class UserSchema implements IUser {
   birth?: string;
 
   @OneToMany(() => MessageSchema, (message) => message.sentUser)
-  sentMessages: MessageSchema[];
+  sentMessages?: MessageSchema[];
 
   @OneToMany(() => MessageSchema, (message) => message.receivedUser)
-  receivedMessages: MessageSchema[];
+  receivedMessages?: MessageSchema[];
 
   @OneToMany(() => MatchingSchema, (matching) => matching.user)
-  matchings: MatchingSchema[];
+  matchings?: MatchingSchema[];
 }
 
 export class UserDTO implements Required<IUser> {
@@ -115,3 +116,5 @@ export class UserDTO implements Required<IUser> {
     Object.assign(this, partial);
   }
 }
+
+checkTypeGuard<ValidateSchemaAndDTO<IUser, UserSchema, UserDTO>>();

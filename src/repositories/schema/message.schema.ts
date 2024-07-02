@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { IUser, UserSchema } from './user.schema';
 import { MatchingSchema } from './matching.schema';
+import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 
 export enum MessageLevelEnum {
   normal = 3,
@@ -75,11 +76,11 @@ export class MessageSchema implements IMessage {
 
   @ManyToOne(() => UserSchema, (user) => user.sentMessages, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'fromUserId' })
-  sentUser: IUser;
+  sentUser?: IUser;
 
   @ManyToOne(() => UserSchema, (user) => user.receivedMessages, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'toUserId' })
-  receivedUser: IUser;
+  receivedUser?: IUser;
 }
 
 export class MessageDTO implements Required<IMessage> {
@@ -117,3 +118,5 @@ export class MessageDTO implements Required<IMessage> {
     Object.assign(this, partial);
   }
 }
+
+checkTypeGuard<ValidateSchemaAndDTO<IMessage, MessageSchema, MessageDTO>>();
