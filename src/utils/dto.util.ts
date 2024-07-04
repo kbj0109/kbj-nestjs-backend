@@ -21,7 +21,9 @@ export function OmitDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'up
 }
 
 /* 받은 Type의 Key 값에 대한 유효성 검사를 필수로 선언 */
-type ValidateObject<T> = Required<{ [K in keyof T]: z.ZodType<T[K]> }>;
+type ValidateObject<T> = Required<{
+  [K in keyof T]: undefined extends T[K] ? z.ZodOptional<z.ZodType<T[K]>> : z.ZodType<T[K]>;
+}>;
 
 /* 유효성 검사 */
 export const validateParameter = <T>(data: T, validator: ValidateObject<T>): T => {
