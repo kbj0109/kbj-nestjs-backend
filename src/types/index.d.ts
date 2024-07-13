@@ -21,6 +21,9 @@ declare global {
   }
 }
 
+/* 모든 key 값을 Pick 으로 선택 가능하면서, 실제 존재하는 값만 Pick */
+export type PickIfExist<T, K extends keyof any> = Omit<T, Exclude<keyof T, K>>;
+
 /**
  * 모든 값이 제거 가능한 Omit 보다는 한정된, 존재하기로 명시된 값만 제거
  * type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;

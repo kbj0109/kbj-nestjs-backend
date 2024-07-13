@@ -18,6 +18,7 @@ import {
   NotEmpty,
   OptionalToNullable,
   QueryOrderOption,
+  PickIfExist,
 } from '../types';
 import { setNullToIsNull } from '../utils/database.util';
 
@@ -46,7 +47,7 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
 
   /** 단일 등록 */
   createOne = async (
-    data: SomeToOptional<T, 'id' | 'createdAt' | 'updatedAt'>,
+    data: SomeToOptional<T, 'id' | keyof PickIfExist<T, 'createdAt' | 'updatedAt'>>,
     option?: QueryTransactionOption,
   ): Promise<T> => {
     const [item] = await this.createMany([data], option);
@@ -55,7 +56,7 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
 
   /** 다중 등록 */
   createMany = async (
-    dataList: SomeToOptional<T, 'id' | 'createdAt' | 'updatedAt'>[],
+    dataList: SomeToOptional<T, 'id' | keyof PickIfExist<T, 'createdAt' | 'updatedAt'>>[],
     option?: QueryTransactionOption,
   ): Promise<T[]> => {
     if (!dataList.length) return [];
@@ -245,7 +246,7 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
   /** Upsert 1개 */
   upsertOne = async (
     condition: NotEmpty<OptionalToNullable<PropertiesToFindOperator<T>>>,
-    data: SomeToOptional<T, 'id' | 'createdAt' | 'updatedAt'>,
+    data: SomeToOptional<T, 'id' | keyof PickIfExist<T, 'createdAt' | 'updatedAt'>>,
     option?: QueryTransactionOption & Pick<FindOneOptions, 'withDeleted'>,
   ): Promise<T> => {
     const item = await this.readOne(condition, option);
