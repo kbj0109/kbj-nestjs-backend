@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { connectDatabase } from './config/database.config';
 import { DatabaseEnum, RedisEnum } from './constant/enum.constant';
 import { UserController } from './controllers/user.controller';
@@ -7,9 +7,15 @@ import { connectRedis } from './config/redis.config';
 import { AuthController } from './controllers/auth.controller';
 import { MessageController } from './controllers/message.controller';
 import { MatchingController } from './controllers/matching.controller';
+import { LoggingStaticMiddleware } from './middlewares/loggingStatic.middleware';
 
 @Module({
-  imports: [],
+  imports: [
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.join(__dirname, '../..', 'public'),
+    //   serveRoot: '/public',
+    // }),
+  ],
   controllers: [UserController, AuthController, MessageController, MatchingController],
   providers: [
     connectDatabase(DatabaseEnum.KBJ),
@@ -20,4 +26,8 @@ import { MatchingController } from './controllers/matching.controller';
     ...getOtherList(),
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggingStaticMiddleware).forRoutes('/public/*');
+  }
+}
