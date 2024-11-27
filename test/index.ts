@@ -34,7 +34,7 @@ export const setupTest = (): { request: TestAgent; appModule: TestingModule } =>
     await Promise.all([
       app!.close(), // App 종료
       dataSource!.destroy(), // DB 연결 종료
-      redisHelper!.closeConnectionOnTest(), // Redis 연결 종료
+      redisHelper!.closeConnection(), // Redis 연결 종료
     ]);
   });
 

@@ -118,9 +118,9 @@ export class RedisHelper {
     }
   }
 
-  /** Redis 연결 종료 - 테스트 환경에서만 실행 */
-  public async closeConnectionOnTest(): Promise<void> {
-    if (environment.NODE_ENV === NodeEnvEnum.Test) {
+  /** Redis 연결 종료 */
+  public async closeConnection(): Promise<void> {
+    if (this.redis.status !== 'end') {
       await this.redis.quit();
     }
   }

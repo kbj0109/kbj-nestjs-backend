@@ -30,5 +30,7 @@ export const setMiddleware = (app: INestApplication): void => {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // DTO 처리
 
+  app.enableShutdownHooks();
+
   setApiDocument(app);
 };
