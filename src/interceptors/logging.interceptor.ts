@@ -25,6 +25,9 @@ export class LoggingInterceptor implements NestInterceptor {
         if (statusCode.startsWith('2')) {
           statusCode = chalk.green(statusCode);
         }
+        if (statusCode.startsWith('3')) {
+          statusCode = chalk.cyanBright(statusCode);
+        }
         if (statusCode.startsWith('4')) {
           statusCode = chalk.yellow(statusCode);
         }

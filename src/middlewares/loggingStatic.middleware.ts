@@ -14,6 +14,9 @@ export class LoggingStaticMiddleware implements NestMiddleware {
       if (statusCode.startsWith('2')) {
         statusCode = chalk.green(statusCode);
       }
+      if (statusCode.startsWith('3')) {
+        statusCode = chalk.cyanBright(statusCode);
+      }
       if (statusCode.startsWith('4')) {
         statusCode = chalk.yellow(statusCode);
       }

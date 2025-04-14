@@ -10,13 +10,16 @@ import { MatchingController } from './controllers/matching.controller';
 import { LoggingStaticMiddleware } from './middlewares/loggingStatic.middleware';
 import { InjectDatasource, InjectRedis } from './decorators/dependency.decorator';
 import { DataSource } from 'typeorm';
+import path from 'path';
+import { environment } from './config/environment.config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
-    // ServeStaticModule.forRoot({
-    //   rootPath: path.join(__dirname, '../..', 'public'),
-    //   serveRoot: '/public',
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(environment.MAIN_FOLDER_PATH, '/src/assets'),
+      serveRoot: '/assets',
+    }),
   ],
   controllers: [UserController, AuthController, MessageController, MatchingController],
   providers: [
@@ -35,7 +38,7 @@ export class AppModule implements NestModule, OnModuleDestroy {
   ) {}
 
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggingStaticMiddleware).forRoutes('/public/*');
+    consumer.apply(LoggingStaticMiddleware).forRoutes('/assets/*');
   }
 
   async onModuleDestroy(): Promise<void> {
