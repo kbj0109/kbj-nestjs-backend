@@ -11,6 +11,9 @@ export const environment = {
 
   NODE_ENV: NodeEnvEnum.Development, // test | development | production
   SERVER_ENV: 'local' as ServerEnvEnum, // local | staging | production
+
+  SERVER_PROTOCOL: 'http',
+  SERVER_HOST: '127.0.0.1',
   SERVER_PORT: 3001, // 실행되는 서버의 Port
 
   MAIN_FOLDER_PATH: '', // # 실제 Root 폴더 Path - ex) /Users/goodoc/goodoc-api-clinic/src
@@ -47,6 +50,9 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
 
   environment.NODE_ENV = (process.env.NODE_ENV || NodeEnvEnum.Development) as NodeEnvEnum;
   environment.SERVER_ENV = (process.env.SERVER_ENV || ServerEnvEnum.Local) as ServerEnvEnum;
+
+  environment.SERVER_PROTOCOL = process.env.SERVER_PROTOCOL || 'http';
+  environment.SERVER_HOST = process.env.SERVER_HOST || '127.0.0.1';
   environment.SERVER_PORT = Number(process.env.SERVER_PORT);
 
   environment.MAIN_FOLDER_PATH = path.join(__dirname, '../../');

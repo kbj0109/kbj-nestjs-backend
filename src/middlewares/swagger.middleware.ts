@@ -13,7 +13,8 @@ export const setApiDocument = (app: INestApplication): void => {
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(`/swagger`, app, document);
 
-    const swaggerAddress = `http://127.0.0.1:${environment.SERVER_PORT}/swagger`;
+    const serverUrl = `${environment.SERVER_PROTOCOL}://${environment.SERVER_HOST}:${environment.SERVER_PORT}`;
+    const swaggerAddress = `${serverUrl}/swagger`;
     printDeveloperMessage(`*** Swagger API Document: ${chalk.yellow(swaggerAddress)}`);
   }
 };
