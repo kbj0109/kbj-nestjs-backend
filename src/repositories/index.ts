@@ -252,6 +252,11 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
     const item = await this.readOne(condition, option);
 
     if (item) {
+      if (!item.id) {
+        await this.update(condition, data as any, option);
+        return this.confirmOne(condition, option) as Promise<T>;
+      }
+
       await this.update({ id: item.id } as any, data as any, option);
       return this.confirmOne({ id: data.id || item.id } as any, option) as Promise<T>;
     }
