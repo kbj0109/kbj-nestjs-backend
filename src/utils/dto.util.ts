@@ -44,8 +44,8 @@ export function validateStringIsNumeric(config = { optional: false }): ZodString
 type ValidateValueToInt_Option = { optional?: boolean; defaultValue?: number; min?: number; max?: number };
 
 /* 유효성 검사 - 값이 Int 인지 + Int 변환   */
-export function validateValueToInt(config: ValidateValueToInt_Option & { optional?: true }): ZodOptional<ZodNumber>;
 export function validateValueToInt(config?: ValidateValueToInt_Option & { optional?: false }): ZodNumber;
+export function validateValueToInt(config: ValidateValueToInt_Option & { optional?: true }): ZodOptional<ZodNumber>;
 export function validateValueToInt(
   config: ValidateValueToInt_Option = { optional: false },
 ): ZodNumber | ZodOptional<ZodNumber> {
