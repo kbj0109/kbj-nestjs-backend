@@ -14,7 +14,10 @@ import helmet from 'helmet';
 
 /** 서버에 필요한 미들웨어 설정 */
 export const setMiddleware = (app: INestApplication): void => {
-  app.enableCors();
+  if (environment.SERVER_ENV !== ServerEnvEnum.Production) {
+    app.enableCors({ origin: true, credentials: true });
+  }
+
   app.use(setRequestIp);
   app.use(express.json({ limit: '20mb' }));
   app.use(cookieParser());
