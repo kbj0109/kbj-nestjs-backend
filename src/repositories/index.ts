@@ -20,7 +20,8 @@ import {
   QueryOrderOption,
   PickIfExist,
 } from '../types';
-import { setNullToIsNull } from '../utils/database.util';
+import { getPaginationInfo, setNullToIsNull } from '../utils/database.util';
+import { ListOutput } from '../constant/dto.constant';
 
 // @ d.ts 파일에 있으면 모종의 이유로 타입 체크와 상속이 제대로 안되는 경우가 있어서 여기로 옮김
 /** Condition 조건 중 undefined | string | number | boolean | Date 타입들에 TypeOrm 기존의 여러 조건을 허용 */
@@ -100,6 +101,12 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
       Pick<FindOneOptions, 'withDeleted'> &
       QueryListOption,
   ): Promise<Pick<T, K>[]> => {
+    if (option && !option.skip) option.skip = undefined;
+    if (option && !option.take) {
+      option.take = undefined;
+      option.skip = undefined; // Take 가 없으면 Skip 지원 안함
+    }
+
     const { transaction, skip, take, select, order, withDeleted } = option || {};
 
     const where = setNullToIsNull(condition) as FindOptionsWhere<T>;
@@ -121,6 +128,12 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
       Pick<FindOneOptions, 'withDeleted'> &
       QueryListOption,
   ): Promise<Pick<T, K>[]> => {
+    if (option && !option.skip) option.skip = undefined;
+    if (option && !option.take) {
+      option.take = undefined;
+      option.skip = undefined; // Take 가 없으면 Skip 지원 안함
+    }
+
     if (!idList.length) return Promise.resolve([]);
 
     const { transaction, skip, take, select, order, withDeleted } = option || {};
@@ -219,6 +232,12 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
     condition: Partial<OptionalToNullable<PropertiesToFindOperator<T>>> = {},
     option?: QueryTransactionOption & Pick<FindOneOptions, 'withDeleted'> & QueryListOption,
   ): Promise<number> => {
+    if (option && !option.skip) option.skip = undefined;
+    if (option && !option.take) {
+      option.take = undefined;
+      option.skip = undefined; // Take 가 없으면 Skip 지원 안함
+    }
+
     const { transaction, skip, take, withDeleted } = option || {};
 
     const where = setNullToIsNull(condition);
@@ -272,7 +291,13 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
       QueryOrderOption<T> &
       Pick<FindOneOptions, 'withDeleted'> &
       QueryListOption,
-  ): Promise<{ list: Pick<T, K>[]; totalCount: number }> => {
+  ): Promise<{ list: Pick<T, K>[] } & QueryListOption & ListOutput> => {
+    if (option && !option.skip) option.skip = undefined;
+    if (option && !option.take) {
+      option.take = undefined;
+      option.skip = undefined; // Take 가 없으면 Skip 지원 안함
+    }
+
     const { transaction, skip, take, select, order, withDeleted } = option || {};
 
     const where = setNullToIsNull(condition) as FindOptionsWhere<T>;
@@ -284,7 +309,9 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
         transaction.manager.find(this.repository.target, allCondition),
       ]);
 
-      return { totalCount, list };
+      const paginationInfo = getPaginationInfo({ totalCount, currentCount: list.length, skip, take });
+
+      return { ...paginationInfo, list };
     }
 
     const [totalCount, list] = await Promise.all([
@@ -292,6 +319,8 @@ export class BaseRepository<T extends ObjectLiteral, EntityAllJoined extends Obj
       this.repository.find(allCondition as any) as any, // # 편의상 Type 비틀기
     ]);
 
-    return { totalCount, list };
+    const paginationInfo = getPaginationInfo({ totalCount, currentCount: list.length, skip, take });
+
+    return { ...paginationInfo, list };
   };
 }
