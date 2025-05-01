@@ -6,6 +6,8 @@ import { DatabaseEnum } from '../constant/enum.constant';
 import { IMatching, MatchingSchema } from './schema/matching.schema';
 import { IUser } from './schema/user.schema';
 import { QueryListOption } from '../types';
+import { getPaginationInfo } from '../utils/database.util';
+import { ListOutput } from '../constant/dto.constant';
 
 @Injectable()
 export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema> {
@@ -19,7 +21,7 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
   readManyAndTotalCountWithUserAndMessage = async (
     userId: IUser['id'],
     option?: QueryListOption,
-  ): Promise<{ list: (IMatching & Pick<MatchingSchema, 'matchingUser' | 'message'>)[]; totalCount: number }> => {
+  ): Promise<{ list: (IMatching & Pick<MatchingSchema, 'matchingUser' | 'message'>)[] } & ListOutput> => {
     const { skip, take } = option || {};
 
     const [list, totalCount] = await this.repository.findAndCount({
@@ -29,8 +31,10 @@ export class MatchingRepository extends BaseRepository<IMatching, MatchingSchema
       take,
     });
 
+    const paginationInfo = getPaginationInfo({ totalCount, currentCount: list.length, skip, take });
+
     return {
-      totalCount,
+      ...paginationInfo,
       list: list as (IMatching & Pick<MatchingSchema, 'matchingUser' | 'message'>)[],
     };
   };

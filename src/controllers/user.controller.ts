@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { UserCreateInput, UserOutput, UserUpdateInput, UsersOutput } from './user.controller.dto';
+import { UserCreateInput, UserOutput, UserUpdateInput, UserListOutput } from './user.controller.dto';
 import { GenderEnum, IUser, UserDTO } from '../repositories/schema/user.schema';
 import { validateParameter, validateStringIsNumeric, validateValueToInt } from '../utils/dto.util';
 import { z } from 'zod';
@@ -41,17 +41,17 @@ export class UserController {
     return new UserDTO(item);
   }
 
-  @ApiResponse({ status: 200, type: UsersOutput })
+  @ApiResponse({ status: 200, type: UserListOutput })
   @Get()
   async ReadMany(@Query() query: ListInput): Promise<{ totalCount: number; list: Omit<IUser, 'password'>[] }> {
     const { skip, take } = validateParameter(query, {
       skip: validateValueToInt({ defaultValue: 0, optional: true }),
-      take: validateValueToInt({ defaultValue: 10, max: 100 }),
+      take: validateValueToInt({ defaultValue: 10, max: 100, optional: true }),
     });
 
-    const { totalCount, list } = await this.userService.readManyAndTotalCount({}, { skip, take });
+    const result = await this.userService.readManyAndTotalCount({}, { skip, take });
 
-    return { totalCount, list: list.map((item) => new UserDTO(item)) };
+    return { ...result, list: result.list.map((item) => new UserDTO(item)) };
   }
 
   @ApiResponse({ status: 200, type: UserOutput })

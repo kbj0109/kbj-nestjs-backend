@@ -7,7 +7,7 @@ import { LoginUser, Transaction } from '../decorators/parameter.decorator';
 import { validateParameter, validateStringIsNumeric, validateValueToInt } from '../utils/dto.util';
 import { z } from 'zod';
 import { MessageDTO, MessageLevelEnum, MessageStatusEnum } from '../repositories/schema/message.schema';
-import { MessageOutput, MessageSendInput, MessageUpdateInput, MessagesOutput } from './message.controller.dto';
+import { MessageOutput, MessageSendInput, MessageUpdateInput, MessageListOutput } from './message.controller.dto';
 import { UserAuthGuard } from '../guards/user.auth.guard.';
 import { UserService } from '../services/user.service';
 import { QueryRunner } from 'typeorm';
@@ -80,44 +80,38 @@ export class MessageController {
   }
 
   @ApiOperation({ summary: '내가 보낸 메세지 목록' })
-  @ApiResponse({ status: 200, type: MessagesOutput })
+  @ApiResponse({ status: 200, type: MessageListOutput })
   @UserAuthGuard()
   @Get('sent')
   async readManySentMessages(
     @Query() query: ListInput,
     @LoginUser() loginUser: LoginUserType,
-  ): Promise<MessagesOutput> {
+  ): Promise<MessageListOutput> {
     const { skip, take } = validateParameter(query, {
       skip: validateValueToInt({ defaultValue: 0, optional: true }),
-      take: validateValueToInt({ defaultValue: 10, max: 100 }),
+      take: validateValueToInt({ defaultValue: 10, max: 100, optional: true }),
     });
 
-    const { totalCount, list } = await this.messageService.readManyAndTotalCount(
-      { fromUserId: loginUser.userId },
-      { skip, take },
-    );
+    const result = await this.messageService.readManyAndTotalCount({ fromUserId: loginUser.userId }, { skip, take });
 
-    return { totalCount, list: list.map((item) => new MessageDTO(item)) };
+    return { ...result, list: result.list.map((item) => new MessageDTO(item)) };
   }
 
   @ApiOperation({ summary: '내가 받은 메세지 목록' })
-  @ApiResponse({ status: 200, type: MessagesOutput })
+  @ApiResponse({ status: 200, type: MessageListOutput })
   @UserAuthGuard()
   @Get('received')
   async readManyReceivedMessages(
     @Query() query: ListInput,
     @LoginUser() loginUser: LoginUserType,
-  ): Promise<MessagesOutput> {
+  ): Promise<MessageListOutput> {
     const { skip, take } = validateParameter(query, {
       skip: validateValueToInt({ defaultValue: 0, optional: true }),
-      take: validateValueToInt({ defaultValue: 10, max: 100 }),
+      take: validateValueToInt({ defaultValue: 10, max: 100, optional: true }),
     });
 
-    const { totalCount, list } = await this.messageService.readManyAndTotalCount(
-      { toUserId: loginUser.userId },
-      { skip, take },
-    );
+    const result = await this.messageService.readManyAndTotalCount({ toUserId: loginUser.userId }, { skip, take });
 
-    return { totalCount, list: list.map((item) => new MessageDTO(item)) };
+    return { ...result, list: result.list.map((item) => new MessageDTO(item)) };
   }
 }

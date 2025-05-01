@@ -1,3 +1,4 @@
+import { ListOutput } from '../constant/dto.constant';
 import { MessageDTO } from '../repositories/schema/message.schema';
 import { PickDataType } from '../utils/dto.util';
 import { ApiProperty, IntersectionType, PartialType, PickType } from '@nestjs/swagger';
@@ -14,10 +15,7 @@ export class MessageUpdateInput extends IntersectionType(
   PartialType(PickDataType(MessageDTO, ['reason'])),
 ) {}
 
-export class MessagesOutput {
-  @ApiProperty()
-  totalCount: number;
-
+export class MessageListOutput extends ListOutput {
   @ApiProperty({ type: [MessageOutput] })
   list: MessageOutput[];
 }

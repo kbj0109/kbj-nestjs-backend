@@ -6,7 +6,7 @@ import { NodeEnvEnum } from '../src/constant/enum.constant';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
 import { IUser } from '../src/repositories/schema/user.schema';
-import { MessageSendInput, MessagesOutput } from '../src/controllers/message.controller.dto';
+import { MessageSendInput, MessageListOutput } from '../src/controllers/message.controller.dto';
 import { IMessage, MessageLevelEnum, MessageStatusEnum } from '../src/repositories/schema/message.schema';
 import { MessageRepository } from '../src/repositories/Message.repository';
 import { waitSeconds } from '../src/utils';
@@ -121,7 +121,7 @@ describe('API /messages 테스트', () => {
     const response = await testing.request.get('/messages/sent').set('Authorization', authorization1);
     expect(response.status).toBe(200);
 
-    const result = response.body as MessagesOutput;
+    const result = response.body as MessageListOutput;
     const list = await messageRepository.readMany({ fromUserId: user1.id });
 
     expect(result.list.length).toBe(list.length);
@@ -134,7 +134,7 @@ describe('API /messages 테스트', () => {
     const response = await testing.request.get('/messages/received').set('Authorization', authorization2);
     expect(response.status).toBe(200);
 
-    const result = response.body as MessagesOutput;
+    const result = response.body as MessageListOutput;
     const list = await messageRepository.readMany({ toUserId: user2.id });
 
     expect(result.list.length).toBe(list.length);

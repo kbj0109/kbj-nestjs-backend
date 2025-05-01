@@ -1,3 +1,4 @@
+import { ListOutput } from '../constant/dto.constant';
 import { UserDTO } from '../repositories/schema/user.schema';
 import { OmitDataType, PickDataType } from '../utils/dto.util';
 import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
@@ -12,10 +13,7 @@ export class UserOutput extends IntersectionType(
   PartialType(PickType(UserDTO, ['birth', 'email', 'gender', 'phone', 'deletedAt'])),
 ) {}
 
-export class UsersOutput {
-  @ApiProperty()
-  totalCount: number;
-
+export class UserListOutput extends ListOutput {
   @ApiProperty({ type: [UserOutput] })
   list: UserOutput[];
 }
