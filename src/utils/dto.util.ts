@@ -27,6 +27,7 @@ type ValidateObject<T> = Required<{
 
 /* 유효성 검사 */
 export const validateParameter = <T>(data: T, validator: ValidateObject<T>): T => {
+  if (!data) data = {} as any;
   return z.object(validator).parse(data) as any;
 };
 
