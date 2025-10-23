@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import ms from 'ms';
 import { environment } from '../config/environment.config';
 import { InvalidTokenException } from '../constant/exception.constant';
 
@@ -14,11 +15,8 @@ export const compareEncryptValue = (value: string, encryptValue: string): Promis
 };
 
 /** JWT 토큰 생성 */
-export const createJwtToken = (
-  data: { [key: string]: any },
-  expiresIn: typeof environment.ACCESS_TOKEN_EXPIRES_IN,
-): string => {
-  return jwt.sign(data, environment.JWT_SECRET_KEY, { algorithm: 'HS256', expiresIn });
+export const createJwtToken = (data: { [key: string]: any }, expiresIn: ms.StringValue): string => {
+  return jwt.sign(data, environment.JWT_SECRET_KEY as jwt.Secret, { algorithm: 'HS256', expiresIn });
 };
 
 /** JWT 토큰 해석 */

@@ -1,3 +1,4 @@
+import ms from 'ms';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -37,8 +38,8 @@ export const environment = {
   SLACK_NOTIFICATION_CHANNEL: '',
 
   JWT_SECRET_KEY: '',
-  ACCESS_TOKEN_EXPIRES_IN: '30m',
-  REFRESH_TOKEN_EXPIRES_IN: '30d',
+  ACCESS_TOKEN_EXPIRES_IN: '30Minutes' as ms.StringValue,
+  REFRESH_TOKEN_EXPIRES_IN: '30Days' as ms.StringValue,
 
   AWS_ACCESS_KEY: '',
   AWS_SECRET_KEY: '',
@@ -76,8 +77,8 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
   environment.SLACK_NOTIFICATION_CHANNEL = process.env.SLACK_NOTIFICATION_CHANNEL || '';
 
   environment.JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || '';
-  environment.ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN || '';
-  environment.REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '';
+  environment.ACCESS_TOKEN_EXPIRES_IN = (process.env.ACCESS_TOKEN_EXPIRES_IN || '30Minutes') as ms.StringValue;
+  environment.REFRESH_TOKEN_EXPIRES_IN = (process.env.REFRESH_TOKEN_EXPIRES_IN || '30Days') as ms.StringValue;
 
   environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY || '';
   environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY || '';

@@ -49,10 +49,10 @@ export class AuthDTO implements Required<IAuth> {
   @ApiProperty()
   userId: string;
 
-  @ApiProperty({ type: 'enum', enum: AuthTypeEnum })
+  @ApiProperty({ enum: AuthTypeEnum })
   type: AuthTypeEnum;
 
-  @ApiProperty({ type: 'json' })
+  @ApiProperty({ type: Object })
   data: { [key: string]: any };
 
   constructor(partial: Partial<AuthDTO>) {

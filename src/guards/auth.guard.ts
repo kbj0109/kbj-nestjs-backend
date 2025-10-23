@@ -33,7 +33,7 @@ export class ExpiredTokenGuard implements CanActivate {
 
     const allowEmptyToken = this.reflector.get<boolean>('allowEmptyToken', context.getHandler());
     const allowExpiredToken = this.reflector.get<boolean>('allowExpiredToken', context.getHandler());
-    const expiresIn = this.reflector.get<string>('expiresIn', context.getHandler());
+    const expiresIn = this.reflector.get<string>('expiresIn', context.getHandler()) as ms.StringValue;
 
     // 빈 토큰 허용이면서 비로그인 상태에서는 통과
     if (allowEmptyToken && !request.loginUser) return true;
