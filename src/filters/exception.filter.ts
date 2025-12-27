@@ -25,22 +25,15 @@ export class AllExceptionFilter implements ExceptionFilter {
       console.log(exception); // 일반 로그
     }
 
-    /** 유효성 검사 - Zod Validation Exception 처리 */
-    if (exception instanceof ZodError) {
-      const errors = exception.errors;
-
-      const badParamList = _.flatten(exception.errors.map((one) => one.path)) as string[];
-      const hint = errors.map((one) => `${one.path[0]} - ${one.message}`);
-
-      const badParameterException = new BadParameterException({ data: { badParamList, hint } });
-
-      response.status(badParameterException.getStatus()).json({
+    /** 유효성 검사 - BadParameterException 처리 */
+    if (exception instanceof BadParameterException) {
+      response.status(exception.getStatus()).json({
         httpMethod: request.method,
         path: request.url,
-        code: badParameterException.name,
-        status: badParameterException.getStatus(),
-        message: badParameterException.message,
-        data: (badParameterException.getResponse() as { data: object }).data || {},
+        code: exception.name,
+        status: exception.getStatus(),
+        message: exception.message,
+        data: (exception.getResponse() as { data: object }).data || {},
         // stack: environment.SERVER_ENV !== ServerEnvEnum.Production ? exception.stack : undefined,
       });
 

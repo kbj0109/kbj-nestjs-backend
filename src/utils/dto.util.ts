@@ -1,6 +1,8 @@
 import { Type } from '@nestjs/common';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { ZodNumber, ZodOptional, ZodString, z } from 'zod';
+import { ZodError, ZodNumber, ZodOptional, ZodString, z } from 'zod';
+import { BadParameterException } from '../constant/exception.constant';
+import _ from 'lodash';
 
 /* DTO - PickType 에서 자동으로 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' 제거 */
 export function PickDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>(
@@ -28,7 +30,19 @@ type ValidateObject<T> = Required<{
 /* 유효성 검사 */
 export const validateParameter = <T>(data: T, validator: ValidateObject<T>): T => {
   if (!data) data = {} as any;
-  return z.object(validator).parse(data) as any;
+
+  try {
+    const result = _.omitBy(z.object(validator).parse(data), _.isUndefined);
+
+    return result as T;
+  } catch (exception: any) {
+    const { errors } = exception as ZodError;
+
+    const badParamList = _.flatten(errors.map((one) => one.path)) as string[];
+    const hint = errors.map((one) => `${one.path[0]} - ${one.message}`);
+
+    throw new BadParameterException({ data: { badParamList, hint } });
+  }
 };
 
 /* 유효성 검사 - String 값이 Numeric 한지   */
