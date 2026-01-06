@@ -54,3 +54,6 @@ export type QueryTransactionOption = { transaction?: QueryRunner };
 export type QueryListOption = { skip?: number; take?: number };
 export type QuerySelectOption<T> = { select?: T[] };
 export type QueryOrderOption<T> = { order?: FindOptionsOrder<T> };
+
+export type OrderValueType = 'ASC' | 'DESC' | 'asc' | 'desc';
+export type PickForOrder<T, K extends keyof T> = { [P in K]: OrderValueType };

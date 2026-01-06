@@ -1,8 +1,10 @@
 import { Type } from '@nestjs/common';
 import { OmitType, PickType } from '@nestjs/swagger';
-import { ZodError, ZodNumber, ZodOptional, ZodString, z } from 'zod';
-import { BadParameterException } from '../constant/exception.constant';
 import _ from 'lodash';
+import { ZodBoolean, ZodEnum, ZodError, ZodNumber, ZodOptional, ZodString, z } from 'zod';
+import { OrderValueList } from '../constant/dto.constant';
+import { BadParameterException } from '../constant/exception.constant';
+import { OrderValueType } from '../types';
 
 /* DTO - PickType 에서 자동으로 'id' | 'createdAt' | 'updatedAt' | 'deletedAt' 제거 */
 export function PickDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>(
@@ -85,4 +87,75 @@ export function validateValueToInt(
   }
 
   return schema;
+}
+
+type ValidateValueToBoolean_Option = { optional?: boolean; defaultValue?: boolean };
+
+/* 유효성 검사 - 값이 Boolean 인지 + Boolean 변환   */
+export function validateValueToBoolean(config: ValidateValueToBoolean_Option & { optional: false }): ZodBoolean;
+export function validateValueToBoolean(
+  config: ValidateValueToBoolean_Option & { optional: true },
+): ZodOptional<ZodBoolean>;
+export function validateValueToBoolean(
+  config: ValidateValueToBoolean_Option = { optional: false },
+): ZodBoolean | ZodOptional<ZodBoolean> {
+  const { optional = false, defaultValue } = config;
+
+  let zodBoolean: any = z.boolean();
+
+  let zodString: any = z
+    .string()
+    .transform((val) => (val.trim() === '' ? undefined : val))
+    .refine((v) => v === 'true' || v === 'false' || v === undefined);
+
+  if (optional) {
+    zodString = zodString.optional();
+    zodBoolean = zodBoolean.optional();
+  }
+
+  if (defaultValue !== undefined) {
+    if (defaultValue === true) {
+      zodString = zodString.default('true');
+      zodBoolean = zodBoolean.default(true);
+    }
+    if (defaultValue === false) {
+      zodString = zodString.default('false');
+      zodBoolean = zodBoolean.default(false);
+    }
+  }
+
+  const schema = z.union([zodBoolean, zodString]).transform((value) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+
+    if (typeof value === 'boolean' || value === undefined) return value;
+  });
+
+  return schema as any;
+}
+
+type ValidateValueToOrderValueType_Option = { optional?: boolean; defaultValue?: OrderValueType };
+
+export function validateValueToOrderValueType(
+  config?: ValidateValueToOrderValueType_Option & { optional?: false },
+): ZodEnum<[OrderValueType, ...OrderValueType[]]>;
+export function validateValueToOrderValueType(
+  config: ValidateValueToOrderValueType_Option & { optional?: true },
+): ZodOptional<ZodEnum<[OrderValueType, ...OrderValueType[]]>>;
+export function validateValueToOrderValueType(
+  config: ValidateValueToOrderValueType_Option = { optional: false },
+): ZodEnum<[OrderValueType, ...OrderValueType[]]> | ZodOptional<ZodEnum<[OrderValueType, ...OrderValueType[]]>> {
+  const { optional = false, defaultValue } = config;
+
+  let schema: any = z.enum(OrderValueList as [string, ...string[]]);
+
+  if (optional) {
+    schema = schema.optional();
+  }
+
+  if (defaultValue !== undefined) {
+    schema = schema.default(defaultValue);
+  }
+
+  return schema as any;
 }

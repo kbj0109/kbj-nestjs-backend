@@ -41,3 +41,5 @@ export class ListInputAndOutput implements ListInput, ListOutput {
   @ApiProperty({ required: false, type: Number, default: 100, description: '0 ~ 1000 사이' })
   take?: number;
 }
+
+export const OrderValueList: [string, ...string[]] = ['ASC', 'DESC', 'asc', 'desc'];
