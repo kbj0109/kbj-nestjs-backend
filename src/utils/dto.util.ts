@@ -26,7 +26,9 @@ export function OmitDataType<T, K extends keyof Omit<T, 'id' | 'createdAt' | 'up
 
 /* DTO로 받은 Type의 Key 값에 대한 유효성 검사를 Optional 여부 구분하여 필수로 구현 */
 type ValidateObject<T> = Required<{
-  [K in keyof T]: undefined extends T[K] ? z.ZodOptional<z.ZodType<T[K]>> : z.ZodType<T[K]>;
+  [K in keyof T]: undefined extends T[K]
+    ? z.ZodOptional<z.ZodType<Exclude<T[K], undefined>>> | z.ZodDefault<z.ZodTypeAny> | z.ZodEffects<z.ZodTypeAny>
+    : z.ZodType<T[K]>;
 }>;
 
 /* 유효성 검사 */
