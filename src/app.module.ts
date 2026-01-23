@@ -4,6 +4,7 @@ import { DatabaseEnum, RedisEnum } from './constant/enum.constant';
 import { UserController } from './controllers/user.controller';
 import { getOtherList, getRepositoryList, getServiceList } from './config';
 import { connectRedis, RedisHelper } from './config/redis.config';
+import { AppController } from './controllers/app.controller';
 import { AuthController } from './controllers/auth.controller';
 import { MessageController } from './controllers/message.controller';
 import { MatchingController } from './controllers/matching.controller';
@@ -21,7 +22,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       serveRoot: '/assets',
     }),
   ],
-  controllers: [UserController, AuthController, MessageController, MatchingController],
+  controllers: [AppController, UserController, AuthController, MessageController, MatchingController],
   providers: [
     connectDatabase(DatabaseEnum.KBJ),
     connectRedis(RedisEnum.Main),
