@@ -1,8 +1,8 @@
-import { MatchingDTO } from '../repositories/schema/matching.schema';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserOutput } from './user.controller.dto';
-import { MessageOutput } from './message.controller.dto';
 import { ListOutput } from '../constant/dto.constant';
+import { MatchingDTO } from '../repositories/schema/matching.schema';
+import { MessageOutput } from './message.controller.dto';
+import { UserOutput } from './user.controller.dto';
 
 export class MatchingOutput extends MatchingDTO {
   @ApiProperty({ type: UserOutput })

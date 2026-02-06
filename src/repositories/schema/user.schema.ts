@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -8,10 +9,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 import { MatchingSchema } from './matching.schema';
 import { MessageSchema } from './message.schema';
-import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
 
 export enum GenderEnum {
   Male = 'Male',

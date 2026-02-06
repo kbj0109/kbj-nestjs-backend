@@ -1,16 +1,15 @@
 import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
-import express from 'express';
-import { AllExceptionFilter } from '../filters/exception.filter';
-import { environment } from '../config/environment.config';
-import { ServerEnvEnum } from '../constant/enum.constant';
-import { TimeoutInterceptor } from '../interceptors/timeout.interceptor';
-import { LoggingInterceptor } from '../interceptors/logging.interceptor';
-import { setRequestIp } from './header.middleware';
-import { setApiDocument } from './swagger.middleware';
-import _ from 'lodash';
 import { Reflector } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import express from 'express';
 import helmet from 'helmet';
+import { environment } from '../config/environment.config';
+import { ServerEnvEnum } from '../constant/enum.constant';
+import { AllExceptionFilter } from '../filters/exception.filter';
+import { LoggingInterceptor } from '../interceptors/logging.interceptor';
+import { TimeoutInterceptor } from '../interceptors/timeout.interceptor';
+import { setRequestIp } from './header.middleware';
+import { setApiDocument } from './swagger.middleware';
 
 /** 서버에 필요한 미들웨어 설정 */
 export const setMiddleware = (app: INestApplication): void => {

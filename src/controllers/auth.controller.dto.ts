@@ -1,6 +1,6 @@
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { UserDTO } from '../repositories/schema/user.schema';
 import { PickDataType } from '../utils/dto.util';
-import { ApiProperty, PickType } from '@nestjs/swagger';
 
 export class AuthLoginInput extends PickDataType(UserDTO, ['username', 'password']) {}
 

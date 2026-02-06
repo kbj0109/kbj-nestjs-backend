@@ -1,14 +1,14 @@
 import { setEnvironment } from '../src/config/environment.config';
 setEnvironment({ NODE_ENV: NodeEnvEnum.Test });
 
-import { setupTest, loginForTest, createUserForTest } from '.';
+import { createUserForTest, loginForTest, setupTest } from '.';
 import { NodeEnvEnum } from '../src/constant/enum.constant';
+import { MessageListOutput, MessageSendInput } from '../src/controllers/message.controller.dto';
+import { MessageRepository } from '../src/repositories/Message.repository';
+import { IMessage, MessageLevelEnum, MessageStatusEnum } from '../src/repositories/schema/message.schema';
+import { IUser } from '../src/repositories/schema/user.schema';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
-import { IUser } from '../src/repositories/schema/user.schema';
-import { MessageSendInput, MessageListOutput } from '../src/controllers/message.controller.dto';
-import { IMessage, MessageLevelEnum, MessageStatusEnum } from '../src/repositories/schema/message.schema';
-import { MessageRepository } from '../src/repositories/Message.repository';
 import { waitSeconds } from '../src/utils';
 
 const testing = setupTest();

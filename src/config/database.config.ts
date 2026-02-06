@@ -2,10 +2,10 @@ import { NotImplementedException, Provider } from '@nestjs/common';
 import path from 'path';
 import { DataSource } from 'typeorm';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { DatabaseEnum } from '../constant/enum.constant';
-import { environment } from './environment.config';
-import { getEnvironmentByAddress, printDeveloperMessage } from '../utils';
 import { DateTimezone } from '../constant/date.constant';
+import { DatabaseEnum } from '../constant/enum.constant';
+import { getEnvironmentByAddress, printDeveloperMessage } from '../utils';
+import { environment } from './environment.config';
 
 export const connectDatabase = (type: DatabaseEnum): Provider => {
   const dbConfig = getDatabaseConfig(type);

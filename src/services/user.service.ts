@@ -1,9 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { BaseService } from '.';
-import { UserRepository } from '../repositories/user.repository';
 import { IUser } from '../repositories/schema/user.schema';
-import { getEncryptValue } from '../utils/encrypt.util';
+import { UserRepository } from '../repositories/user.repository';
 import { OnlyData, QueryTransactionOption } from '../types';
+import { getEncryptValue } from '../utils/encrypt.util';
 
 @Injectable()
 export class UserService extends BaseService {

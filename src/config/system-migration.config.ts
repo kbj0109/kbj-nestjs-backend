@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
+import { DatabaseEnum } from '../constant/enum.constant';
 import { getDatabaseConfig } from './database.config';
 import { setEnvironment } from './environment.config';
-import { DatabaseEnum } from '../constant/enum.constant';
 
 setEnvironment();
 

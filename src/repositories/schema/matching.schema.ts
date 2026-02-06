@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IUser, UserSchema } from './user.schema';
-import { IMessage, MessageSchema } from './message.schema';
 import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
+import { IMessage, MessageSchema } from './message.schema';
+import { IUser, UserSchema } from './user.schema';
 
 export interface IMatching {
   id: string;

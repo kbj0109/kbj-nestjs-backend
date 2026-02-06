@@ -1,19 +1,19 @@
 import { MiddlewareConsumer, Module, NestModule, OnModuleDestroy } from '@nestjs/common';
-import { connectDatabase } from './config/database.config';
-import { DatabaseEnum, RedisEnum } from './constant/enum.constant';
-import { UserController } from './controllers/user.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
+import { DataSource } from 'typeorm';
 import { getOtherList, getRepositoryList, getServiceList } from './config';
+import { connectDatabase } from './config/database.config';
+import { environment } from './config/environment.config';
 import { connectRedis, RedisHelper } from './config/redis.config';
+import { DatabaseEnum, RedisEnum } from './constant/enum.constant';
 import { AppController } from './controllers/app.controller';
 import { AuthController } from './controllers/auth.controller';
-import { MessageController } from './controllers/message.controller';
 import { MatchingController } from './controllers/matching.controller';
-import { LoggingStaticMiddleware } from './middlewares/loggingStatic.middleware';
+import { MessageController } from './controllers/message.controller';
+import { UserController } from './controllers/user.controller';
 import { InjectDatasource, InjectRedis } from './decorators/dependency.decorator';
-import { DataSource } from 'typeorm';
-import path from 'path';
-import { environment } from './config/environment.config';
-import { ServeStaticModule } from '@nestjs/serve-static';
+import { LoggingStaticMiddleware } from './middlewares/loggingStatic.middleware';
 
 @Module({
   imports: [

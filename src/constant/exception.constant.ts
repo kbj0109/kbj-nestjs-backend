@@ -1,9 +1,11 @@
-import { UnauthorizedException } from '@nestjs/common';
-import { NotFoundException } from '@nestjs/common';
-import { BadRequestException } from '@nestjs/common';
-import { ConflictException } from '@nestjs/common';
-import { ForbiddenException } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  HttpException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 /** Bad Parameter Exception */
 export class BadParameterException extends HttpException {

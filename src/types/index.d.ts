@@ -1,6 +1,6 @@
 import { FindOptionsOrder } from 'typeorm';
-import { IUser } from '../repositories/schema/user.schema';
 import { IAuth } from '../repositories/schema/auth.schema';
+import { IUser } from '../repositories/schema/user.schema';
 
 export {};
 

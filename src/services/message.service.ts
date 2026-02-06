@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseService } from '.';
+import { MatchingRepository } from '../repositories/matching.repository';
 import { MessageRepository } from '../repositories/Message.repository';
 import { IMessage, MessageStatusEnum } from '../repositories/schema/message.schema';
 import { QueryTransactionOption } from '../types';
-import { MatchingRepository } from '../repositories/matching.repository';
 
 @Injectable()
 export class MessageService extends BaseService {

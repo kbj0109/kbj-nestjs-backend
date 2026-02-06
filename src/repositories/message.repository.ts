@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, IsNull, Not } from 'typeorm';
+import { DatabaseEnum } from '../constant/enum.constant';
 import { InjectDatasource } from '../decorators/dependency.decorator';
 import { BaseRepository } from './index';
-import { DatabaseEnum } from '../constant/enum.constant';
 import { IMessage, MessageSchema } from './schema/message.schema';
 
 @Injectable()

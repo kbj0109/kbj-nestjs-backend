@@ -1,7 +1,7 @@
+import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
 import { ListOutput } from '../constant/dto.constant';
 import { UserDTO } from '../repositories/schema/user.schema';
 import { OmitDataType, PickDataType } from '../utils/dto.util';
-import { ApiProperty, IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
 
 export class UserCreateInput extends IntersectionType(
   PickDataType(UserDTO, ['username', 'password', 'name']),

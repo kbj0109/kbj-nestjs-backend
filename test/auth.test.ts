@@ -3,9 +3,9 @@ setEnvironment({ NODE_ENV: NodeEnvEnum.Test });
 
 import { createUserForTest, setupTest } from '.';
 import { NodeEnvEnum } from '../src/constant/enum.constant';
+import { IUser } from '../src/repositories/schema/user.schema';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
-import { IUser } from '../src/repositories/schema/user.schema';
 import { openJwtToken } from '../src/utils/encrypt.util';
 
 const testing = setupTest();

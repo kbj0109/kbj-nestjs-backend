@@ -1,10 +1,10 @@
-import ms from 'ms';
 import * as dotenv from 'dotenv';
+import ms from 'ms';
 dotenv.config();
 
-import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum.constant';
-import path from 'path';
 import chalk from 'chalk';
+import path from 'path';
+import { NodeEnvEnum, ServerEnvEnum } from '../constant/enum.constant';
 
 export const environment = {
   IS_TEST: false,

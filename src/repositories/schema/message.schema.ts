@@ -10,9 +10,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IUser, UserSchema } from './user.schema';
-import { MatchingSchema } from './matching.schema';
 import { ValidateSchemaAndDTO, checkTypeGuard } from '../../utils/type.util';
+import { MatchingSchema } from './matching.schema';
+import { IUser, UserSchema } from './user.schema';
 
 export enum MessageLevelEnum {
   normal = 3,

@@ -1,11 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import supertest from 'supertest';
+import TestAgent from 'supertest/lib/agent';
 import { DataSource } from 'typeorm';
-import { DatabaseEnum, RedisEnum } from '../src/constant/enum.constant';
 import { AppModule } from '../src/app.module';
 import { RedisHelper } from '../src/config/redis.config';
-import TestAgent from 'supertest/lib/agent';
-import supertest from 'supertest';
+import { DatabaseEnum, RedisEnum } from '../src/constant/enum.constant';
 import { IUser } from '../src/repositories/schema/user.schema';
 import { AuthService } from '../src/services/auth.service';
 import { UserService } from '../src/services/user.service';

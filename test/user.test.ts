@@ -1,11 +1,11 @@
 import { setEnvironment } from '../src/config/environment.config';
 setEnvironment({ NODE_ENV: NodeEnvEnum.Test });
 
-import { setupTest, loginForTest } from '.';
+import { loginForTest, setupTest } from '.';
 import { NodeEnvEnum } from '../src/constant/enum.constant';
+import { IUser } from '../src/repositories/schema/user.schema';
 import { UserRepository } from '../src/repositories/user.repository';
 import { OnlyData } from '../src/types';
-import { IUser } from '../src/repositories/schema/user.schema';
 import { createRandomString, waitSeconds } from '../src/utils';
 
 const testing = setupTest();

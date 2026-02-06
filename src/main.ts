@@ -3,9 +3,9 @@ setEnvironment();
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { printDeveloperMessage } from './utils';
 import { checkAllDatabaseSync } from './config/system-database.config';
 import { setMiddleware } from './middlewares';
+import { printDeveloperMessage } from './utils';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);

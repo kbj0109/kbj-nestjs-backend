@@ -2,9 +2,9 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import ms from 'ms';
 import { ExpiredTokenException } from '../constant/exception.constant';
 import { UserService } from '../services/user.service';
-import ms from 'ms';
 
 /** 로그인 상태 확인 */
 @Injectable()
