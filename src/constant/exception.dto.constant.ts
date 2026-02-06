@@ -49,7 +49,7 @@ export interface IExceptionResponseOutput {
   code: string;
   status: number;
   message: string;
-  data?: object;
+  data?: Record<string, any>;
   stack?: string;
 }
 
@@ -62,10 +62,10 @@ export class BadRequestExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: badRequestException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [badRequestException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: badRequestException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [badRequestException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: badRequestException.message })
@@ -76,9 +76,10 @@ export class BadRequestExceptionDTO implements IExceptionResponseOutput {
     description: 'Additional Data',
     nullable: true,
     required: false,
+    additionalProperties: true,
     default: { sample1: 'Sample Error Data 1', sample2: 'Sample Error Data 2' },
   })
-  data?: object;
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -93,17 +94,23 @@ export class NotFoundExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: notFoundException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [notFoundException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: notFoundException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [notFoundException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: notFoundException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -118,17 +125,23 @@ export class ConflictExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: conflictException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [conflictException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: conflictException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [conflictException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: conflictException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -143,17 +156,23 @@ export class UnauthorizedExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: unauthorizedException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [unauthorizedException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: unauthorizedException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [unauthorizedException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: unauthorizedException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -168,17 +187,23 @@ export class ForbiddenExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: forbiddenException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [forbiddenException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: forbiddenException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [forbiddenException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: forbiddenException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -193,17 +218,23 @@ export class InvalidTokenExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: invalidTokenException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [invalidTokenException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: invalidTokenException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [invalidTokenException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: invalidTokenException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -218,17 +249,23 @@ export class ExpiredTokenExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: expiredTokenException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [expiredTokenException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: expiredTokenException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [expiredTokenException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: expiredTokenException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -251,17 +288,17 @@ export class BadParameterExceptionDTO implements IExceptionResponseOutput {
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: badParameterException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [badParameterException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: badParameterException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [badParameterException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: badParameterException.message })
   message: string;
 
   @ApiProperty({ type: BadParameterExceptionData })
-  data: object;
+  data: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
@@ -276,17 +313,23 @@ export class InternalServerErrorExceptionDTO implements IExceptionResponseOutput
   @ApiProperty({ type: String, description: 'Api Path', default: '/health' })
   path: string;
 
-  @ApiProperty({ type: String, description: 'Exception Code', default: internalServerErrorException.name })
+  @ApiProperty({ type: String, readOnly: true, enum: [internalServerErrorException.name] })
   code: string;
 
-  @ApiProperty({ type: Number, description: 'Http Status Code', default: internalServerErrorException.getStatus() })
+  @ApiProperty({ type: Number, readOnly: true, enum: [internalServerErrorException.getStatus()] })
   status: number;
 
   @ApiProperty({ type: String, description: 'Exception Message', default: internalServerErrorException.message })
   message: string;
 
-  @ApiProperty({ type: Object, description: 'Additional Data', nullable: true, required: false })
-  data?: object;
+  @ApiProperty({
+    type: Object,
+    description: 'Additional Data',
+    nullable: true,
+    required: false,
+    additionalProperties: true,
+  })
+  data?: Record<string, any>;
 
   @ApiProperty({ type: String, description: 'Error Stack (Not in Production)', nullable: true, required: false })
   stack?: string;
