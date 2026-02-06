@@ -43,6 +43,8 @@ export const environment = {
 
   AWS_ACCESS_KEY: '',
   AWS_SECRET_KEY: '',
+
+  ALLOWED_ORIGINS: [] as string[],
 };
 
 export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof environment => {
@@ -82,6 +84,8 @@ export const setEnvironment = (definedEnv?: Partial<typeof environment>): typeof
 
   environment.AWS_ACCESS_KEY = process.env.AWS_DEV_ACCESS_KEY || '';
   environment.AWS_SECRET_KEY = process.env.AWS_DEV_SECRET_KEY || '';
+
+  environment.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
 
   // @ 일부로 전달된 값은 env 값은 고정
   Object.entries(definedEnv || {}).forEach(([key, value]) => {
