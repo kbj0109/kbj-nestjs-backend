@@ -1,6 +1,6 @@
 import { applyDecorators, CallHandler, ExecutionContext, NestInterceptor, UseInterceptors } from '@nestjs/common';
 import { NotImplementedException } from '@nestjs/common/exceptions';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, concatMap, Observable } from 'rxjs';
 import { DataSource } from 'typeorm';
 import { DatabaseEnum } from '../constant/enum.constant';
 import { InjectDatasource } from '../decorators/dependency.decorator';
@@ -31,7 +31,7 @@ class TransactionInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       /** Transaction Commit */
-      tap(async () => {
+      concatMap(async () => {
         await queryRunner.commitTransaction();
         await queryRunner.release();
       }),
