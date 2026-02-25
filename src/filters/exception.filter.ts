@@ -27,7 +27,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     console.log();
 
     /** 존재하지 않는 API 에 대한 404 Exception 처리 */
-    if (exception.message.startsWith('Cannot') && exception.status === 404) {
+    if ((exception.message || '').startsWith('Cannot') && exception.status === 404) {
       console.log(exception.name, exception.message); // # 존재하지 않는 API 에 대한 404 Exception 로그
     } else if (exception instanceof ExpiredTokenException) {
       console.log(request.path, exception.message);
