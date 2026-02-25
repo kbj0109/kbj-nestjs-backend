@@ -13,5 +13,5 @@ export const Transaction = (databaseType: DatabaseEnum): ParameterDecorator =>
 /** LoginUser 가져오기 */
 export const LoginUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
   const request = context.switchToHttp().getRequest() as Request;
-  return request.loginUser || {};
+  return request.loginUser;
 });

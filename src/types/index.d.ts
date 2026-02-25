@@ -15,9 +15,10 @@ declare global {
   };
 
   namespace Express {
-    type Request = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    interface Request {
       loginUser?: LoginUserType;
-    };
+    }
   }
 }
 
